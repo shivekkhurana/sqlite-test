@@ -1,0 +1,20 @@
+{
+  "name": "sqlite-test",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@libsql/client": "^0.14.0",
+    "better-sqlite3": "^11.0.0",
+    "commander": "^14.0.2",
+    "piscina": "^4.8.0"
+  },
+  "scripts": {
+    "cli": "tsx src/cli.ts"
+  }
+}

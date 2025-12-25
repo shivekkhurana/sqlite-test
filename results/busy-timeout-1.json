@@ -1,0 +1,134 @@
+{
+  "testName": "busyTimeout1ConcurrentWrites",
+  "timestamp": "2025-12-24T17:16:02.478Z",
+  "configurations": [
+    {
+      "concurrency": 1,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 0.7955622229099925,
+        "p95": 1.116647999995621,
+        "p99": 1.3723310000059428,
+        "writesPerSec": 982.7102231327108,
+        "totalDuration": 101759.39727300001
+      }
+    },
+    {
+      "concurrency": 2,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 1.5653911375999834,
+        "p95": 2.44517999998061,
+        "p99": 4.623919999998179,
+        "writesPerSec": 775.6912969502893,
+        "totalDuration": 128917.264372
+      }
+    },
+    {
+      "concurrency": 4,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 5.013621336090113,
+        "p95": 11.076808999991044,
+        "p99": 21.73486700002104,
+        "writesPerSec": 335.1200251071127,
+        "totalDuration": 298400.550573
+      }
+    },
+    {
+      "concurrency": 8,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 23.783772884749958,
+        "p95": 64.017804000061,
+        "p99": 91.16516699991189,
+        "writesPerSec": 121.80719961108112,
+        "totalDuration": 820969.5347999999
+      }
+    },
+    {
+      "concurrency": 16,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 69.69499433829037,
+        "p95": 193.92000299994834,
+        "p99": 253.03985900012776,
+        "writesPerSec": 84.45075839810706,
+        "totalDuration": 1184121.9889179997
+      }
+    },
+    {
+      "concurrency": 32,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 127.66505692826975,
+        "p95": 448.53138600010425,
+        "p99": 659.513145999983,
+        "writesPerSec": 71.3938524521745,
+        "totalDuration": 1400680.8228620002
+      }
+    },
+    {
+      "concurrency": 64,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 100000,
+        "errors": 0,
+        "lockErrors": 0,
+        "successRate": 100,
+        "avgTime": 248.93632333813005,
+        "p95": 863.8957239999436,
+        "p99": 1219.809957000427,
+        "writesPerSec": 66.38679917325841,
+        "totalDuration": 1506323.5650060005
+      }
+    },
+    {
+      "concurrency": 128,
+      "totalWrites": 100000,
+      "metrics": {
+        "total": 100000,
+        "successful": 99995,
+        "errors": 5,
+        "lockErrors": 5,
+        "successRate": 99.995,
+        "avgTime": 603.8417842523386,
+        "p95": 1824.45264699962,
+        "p99": 2607.2363699991256,
+        "writesPerSec": 61.27826156920206,
+        "totalDuration": 1631818.4856970003
+      }
+    }
+  ]
+}
