@@ -319,6 +319,123 @@ export interface MixedResults {
     };
 }
 
+// Graph generation functions for mixed read/write reports
+function generateReadWriteLatencyChart(reads: MixedReadMetrics, writes: MixedWriteMetrics): string {
+    const maxLatency = Math.max(reads.p99, writes.p99);
+    const yAxisMax = roundUpToNiceNumber(maxLatency);
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "Read vs Write Latency Comparison"
+    x-axis ["P50", "P95", "P99"]
+    y-axis "Latency (ms)" 0 --> ${yAxisMax}
+    line "Reads" [${reads.p50.toFixed(2)}, ${reads.p95.toFixed(2)}, ${reads.p99.toFixed(2)}]
+    line "Writes" [${writes.p50.toFixed(2)}, ${writes.p95.toFixed(2)}, ${writes.p99.toFixed(2)}]
+\`\`\``;
+}
+
+function generateThroughputChart(reads: MixedReadMetrics, writes: MixedWriteMetrics, combined: { opsPerSec: number }): string {
+    const maxThroughput = Math.max(reads.readsPerSec, writes.writesPerSec, combined.opsPerSec);
+    const yAxisMax = roundUpToNiceNumber(maxThroughput);
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "Throughput Comparison"
+    x-axis ["Reads", "Writes", "Combined"]
+    y-axis "Operations/sec" 0 --> ${yAxisMax}
+    bar [${reads.readsPerSec.toFixed(0)}, ${writes.writesPerSec.toFixed(0)}, ${combined.opsPerSec.toFixed(0)}]
+\`\`\``;
+}
+
+function generateQueryTypeLatencyChart(reads: MixedReadMetrics): string {
+    const queryTypes = Object.keys(reads.byQueryType);
+    const avgTimes = queryTypes.map(qt => {
+        const stats = reads.byQueryType[qt];
+        return stats ? stats.avgTime : 0;
+    });
+    if (avgTimes.length === 0) return '';
+    const maxLatency = Math.max(...avgTimes);
+    const yAxisMax = roundUpToNiceNumber(maxLatency);
+
+    // Format query type names for better readability
+    const formattedTypes = queryTypes.map(qt => qt.replace(/_/g, ' '));
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "Average Latency by Query Type"
+    x-axis [${formattedTypes.map(t => `"${t}"`).join(", ")}]
+    y-axis "Avg Latency (ms)" 0 --> ${yAxisMax}
+    bar [${avgTimes.map(t => t.toFixed(2)).join(", ")}]
+\`\`\``;
+}
+
+function generateQueryTypeP95Chart(reads: MixedReadMetrics): string {
+    const queryTypes = Object.keys(reads.byQueryType);
+    const p95Times = queryTypes.map(qt => {
+        const stats = reads.byQueryType[qt];
+        return stats ? stats.p95 : 0;
+    });
+    if (p95Times.length === 0) return '';
+    const maxLatency = Math.max(...p95Times);
+    const yAxisMax = roundUpToNiceNumber(maxLatency);
+
+    // Format query type names for better readability
+    const formattedTypes = queryTypes.map(qt => qt.replace(/_/g, ' '));
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "P95 Latency by Query Type"
+    x-axis [${formattedTypes.map(t => `"${t}"`).join(", ")}]
+    y-axis "P95 Latency (ms)" 0 --> ${yAxisMax}
+    bar [${p95Times.map(t => t.toFixed(2)).join(", ")}]
+\`\`\``;
+}
+
+function generateQueryTypeDistributionChart(reads: MixedReadMetrics): string {
+    const queryTypes = Object.keys(reads.byQueryType);
+    const counts = queryTypes.map(qt => {
+        const stats = reads.byQueryType[qt];
+        return stats ? stats.count : 0;
+    });
+    if (counts.length === 0) return '';
+    const maxCount = Math.max(...counts);
+    const yAxisMax = roundUpToNiceNumber(maxCount);
+
+    // Format query type names for better readability
+    const formattedTypes = queryTypes.map(qt => qt.replace(/_/g, ' '));
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "Query Type Distribution"
+    x-axis [${formattedTypes.map(t => `"${t}"`).join(", ")}]
+    y-axis "Count" 0 --> ${yAxisMax}
+    bar [${counts.join(", ")}]
+\`\`\``;
+}
+
+function generateErrorRateChart(reads: MixedReadMetrics, writes: MixedWriteMetrics): string {
+    const maxErrors = Math.max(reads.busyErrors, writes.lockErrors, 1);
+    const yAxisMax = roundUpToNiceNumber(maxErrors);
+
+    return `\`\`\`mermaid
+xychart-beta
+    title "Error Rates: Reads vs Writes"
+    x-axis ["Read Busy Errors", "Write Lock Errors"]
+    y-axis "Error Count" 0 --> ${yAxisMax}
+    bar [${reads.busyErrors}, ${writes.lockErrors}]
+\`\`\``;
+}
+
+function generateMixedSuccessRateChart(reads: MixedReadMetrics, writes: MixedWriteMetrics): string {
+    return `\`\`\`mermaid
+xychart-beta
+    title "Success Rate: Reads vs Writes"
+    x-axis ["Reads", "Writes"]
+    y-axis "Success Rate (%)" 0 --> 100
+    bar [${reads.successRate.toFixed(1)}, ${writes.successRate.toFixed(1)}]
+\`\`\``;
+}
+
 function generateMixedMarkdown(results: MixedResults): string {
     const timestamp = new Date(results.timestamp).toLocaleString();
     const config = results.configuration;
@@ -371,6 +488,50 @@ function generateMixedMarkdown(results: MixedResults): string {
 ## Read Query Breakdown
 
 ${queryTypeTable}
+
+## Charts
+
+### Read vs Write Latency Comparison
+
+This chart compares latency percentiles (P50, P95, P99) between read and write operations. It shows how read and write latencies differ under concurrent load.
+
+${generateReadWriteLatencyChart(reads, writes)}
+
+### Throughput Comparison
+
+This chart compares the throughput of reads, writes, and combined operations. It shows the relative performance of read vs write operations.
+
+${generateThroughputChart(reads, writes, combined)}
+
+### Average Latency by Query Type
+
+This chart shows the average latency for each read query type. It helps identify which queries are the slowest.
+
+${generateQueryTypeLatencyChart(reads)}
+
+### P95 Latency by Query Type
+
+This chart shows the P95 latency (95th percentile) for each read query type. It highlights the worst-case performance for each query type.
+
+${generateQueryTypeP95Chart(reads)}
+
+### Query Type Distribution
+
+This chart shows the distribution of query types executed during the test. It helps verify that queries are evenly distributed.
+
+${generateQueryTypeDistributionChart(reads)}
+
+### Error Rates
+
+This chart compares error rates between reads (SQLITE_BUSY errors) and writes (lock errors). It helps identify contention issues.
+
+${generateErrorRateChart(reads, writes)}
+
+### Success Rate Comparison
+
+This chart compares the success rate of read vs write operations. Both should ideally be at 100%.
+
+${generateMixedSuccessRateChart(reads, writes)}
 
 ## Key Observations
 

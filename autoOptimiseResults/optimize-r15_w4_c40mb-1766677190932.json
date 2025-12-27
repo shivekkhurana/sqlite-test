@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r15_w4_c40mb",
+  "timestamp": "2025-12-25T15:39:50.932Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 19,
+    "readWorkers": 15,
+    "writeWorkers": 4,
+    "cacheSizeMB": 40,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1672.0828591626403,
+    "writesPerSec": 166.37640389678012,
+    "opsPerSec": 1838.4592630594204
+  }
+}

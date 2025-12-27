@@ -7,6 +7,8 @@ import { fileURLToPath } from "node:url";
 import type { WriteResult, WriteTask } from "./workerCore.js";
 import type { ReadResult, ReadTask, ReadQueryType } from "./readWorkerCore.js";
 import { generateReport as generateReportFromResults } from "./reportGenerator.js";
+import { generateCompoundReport } from "./compoundReportsGenerator.js";
+import { generateScenarioCompoundReport } from "./scenarioCompoundReportsGenerator.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..");
@@ -97,6 +99,14 @@ const SCENARIOS: Record<string, ScenarioConfig> = {
         reportFile: "wal-sync-normal-autocheckpoint-4000-report.md",
         setupPath: join(projectRoot, "scenarios", "walSyncNormalAutocheckpoint4000", "setup.ts"),
         workerPath: join(projectRoot, "scenarios", "walSyncNormalAutocheckpoint4000", "worker.ts")
+    },
+    walSyncNormalAutocheckpoint4000Mmap1gb: {
+        name: "walSyncNormalAutocheckpoint4000Mmap1gb",
+        dbPath: join(projectRoot, "db", "wal-sync-normal-autocheckpoint-4000-mmap-1gb.db"),
+        resultFile: "wal-sync-normal-autocheckpoint-4000-mmap-1gb.json",
+        reportFile: "wal-sync-normal-autocheckpoint-4000-mmap-1gb-report.md",
+        setupPath: join(projectRoot, "scenarios", "walSyncNormalAutocheckpoint4000Mmap1gb", "setup.ts"),
+        workerPath: join(projectRoot, "scenarios", "walSyncNormalAutocheckpoint4000Mmap1gb", "worker.ts")
     },
     walSyncNormalBusyTimeout5000: {
         name: "walSyncNormalBusyTimeout5000",
@@ -395,6 +405,12 @@ program.command("walSyncNormalAutocheckpoint4000")
         await runScenario(SCENARIOS.walSyncNormalAutocheckpoint4000!);
     });
 
+program.command("walSyncNormalAutocheckpoint4000Mmap1gb")
+    .description("Run WAL + sync NORMAL + autocheckpoint 4000 + temp_store memory + mmap_size 1GB test")
+    .action(async () => {
+        await runScenario(SCENARIOS.walSyncNormalAutocheckpoint4000Mmap1gb!);
+    });
+
 program.command("walSyncNormalBusyTimeout5000")
     .description("Run WAL + sync NORMAL + autocheckpoint 4000 + busy_timeout 5000 test")
     .action(async () => {
@@ -458,6 +474,25 @@ program.command("report-all")
                 }
             }
         }
+    });
+
+program.command("compound-report")
+    .description("Generate compound report comparing all mixed read/write configurations")
+    .action(() => {
+        generateCompoundReport({
+            resultsDir: join(projectRoot, "results"),
+            outputPath: join(projectRoot, "derived-reports", "mixed-read-write-throughput.md")
+        });
+    });
+
+program.command("scenario-compound-report")
+    .description("Generate compound report comparing all scenario configurations")
+    .action(() => {
+        generateScenarioCompoundReport({
+            resultsDir: join(projectRoot, "results"),
+            scenariosDir: join(projectRoot, "scenarios"),
+            outputPath: join(projectRoot, "derived-reports", "scenario-throughput.html")
+        });
     });
 
 // Mixed Read/Write Scenario
@@ -837,9 +872,38 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     console.log(`\nResults saved to results/${resultFile}`);
 }
 
+/**
+ * Format a number with k (thousands) or m (millions) suffix
+ * Pattern: < 10000 = no suffix, >= 10000 = k, >= 1000000 = m
+ */
+function formatNumber(num: number): string {
+    if (num >= 1000000) {
+        const millions = num / 1000000;
+        if (millions === Math.floor(millions)) {
+            return `${millions}m`;
+        }
+        return `${millions.toFixed(1)}m`;
+    } else if (num >= 10000) {
+        const thousands = num / 1000;
+        if (thousands === Math.floor(thousands)) {
+            return `${thousands}k`;
+        }
+        return `${thousands.toFixed(1)}k`;
+    }
+    return num.toString();
+}
+
+/**
+ * Generate ID from parameters: rX_wY_RZ_WP_cQ
+ */
+function generateId(readWorkers: number, writeWorkers: number, totalReads: number, totalWrites: number, cacheSizeKB: number): string {
+    const cacheSizeMB = Math.abs(cacheSizeKB) / 1000;
+    return `r${readWorkers}_w${writeWorkers}_R${formatNumber(totalReads)}_W${formatNumber(totalWrites)}_c${cacheSizeMB}mb`;
+}
+
 program.command("mixedReadWrite")
     .description("Run mixed read/write benchmark (WAL + sync NORMAL + 2000ms busy + 4000 checkpoint)")
-    .requiredOption("-i, --id <id>", "Unique ID for this benchmark run (used for db and result file names)")
+    .option("-i, --id <id>", "Unique ID for this benchmark run (auto-generated if not provided)")
     .option("-r, --read-workers <n>", "Number of concurrent read workers", "10")
     .option("-w, --write-workers <n>", "Number of concurrent write workers", "5")
     .option("-R, --total-reads <n>", "Total number of read operations", "2000000")
@@ -852,11 +916,14 @@ program.command("mixedReadWrite")
         const totalWrites = parseInt(opts.totalWrites, 10);
         const cacheSize = parseInt(opts.cacheSize, 10);
         
+        // Generate ID automatically if not provided
+        const id = opts.id || generateId(readWorkers, writeWorkers, totalReads, totalWrites, cacheSize);
+        
         const readsPerWorker = Math.ceil(totalReads / readWorkers);
         const writesPerWorker = Math.ceil(totalWrites / writeWorkers);
         
         await runMixedReadWrite({
-            id: opts.id,
+            id: id,
             readWorkers,
             writeWorkers,
             readsPerWorker,

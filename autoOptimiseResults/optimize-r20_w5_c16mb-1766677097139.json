@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r20_w5_c16mb",
+  "timestamp": "2025-12-25T15:38:17.139Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 25,
+    "readWorkers": 20,
+    "writeWorkers": 5,
+    "cacheSizeMB": 16,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1451.3049175957744,
+    "writesPerSec": 145.13049175957747,
+    "opsPerSec": 1596.435409355352
+  }
+}

@@ -5,6 +5,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.10",
     "tsx": "^4.19.0"
   },
   "dependencies": {
@@ -12,6 +13,7 @@
     "@libsql/client": "^0.14.0",
     "better-sqlite3": "^11.0.0",
     "commander": "^14.0.2",
+    "pg": "^8.13.1",
     "piscina": "^4.8.0"
   },
   "scripts": {

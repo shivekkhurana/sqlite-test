@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r10_w3_c16mb",
+  "timestamp": "2025-12-25T15:37:47.471Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 13,
+    "readWorkers": 10,
+    "writeWorkers": 3,
+    "cacheSizeMB": 16,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 2047.5060657955826,
+    "writesPerSec": 205.77435961245604,
+    "opsPerSec": 2253.280425408039
+  }
+}

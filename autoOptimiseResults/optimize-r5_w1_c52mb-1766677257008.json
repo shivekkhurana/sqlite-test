@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r5_w1_c52mb",
+  "timestamp": "2025-12-25T15:40:57.008Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 6,
+    "readWorkers": 5,
+    "writeWorkers": 1,
+    "cacheSizeMB": 52,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1260.544499646431,
+    "writesPerSec": 126.0544499646431,
+    "opsPerSec": 1386.598949611074
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r16_w4_c128mb",
+  "timestamp": "2025-12-25T15:44:22.101Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 20,
+    "readWorkers": 16,
+    "writeWorkers": 4,
+    "cacheSizeMB": 128,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1228.1358935289168,
+    "writesPerSec": 122.81358935289168,
+    "opsPerSec": 1350.9494828818085
+  }
+}

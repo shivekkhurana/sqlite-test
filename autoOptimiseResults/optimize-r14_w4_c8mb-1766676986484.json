@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r14_w4_c8mb",
+  "timestamp": "2025-12-25T15:36:26.484Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 18,
+    "readWorkers": 14,
+    "writeWorkers": 4,
+    "cacheSizeMB": 8,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1132.1634466003263,
+    "writesPerSec": 113.10324141861402,
+    "opsPerSec": 1245.2666880189404
+  }
+}

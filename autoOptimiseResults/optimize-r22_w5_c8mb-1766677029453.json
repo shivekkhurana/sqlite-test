@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r22_w5_c8mb",
+  "timestamp": "2025-12-25T15:37:09.453Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 27,
+    "readWorkers": 22,
+    "writeWorkers": 5,
+    "cacheSizeMB": 8,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1339.3916761857088,
+    "writesPerSec": 133.80536225631457,
+    "opsPerSec": 1473.1970384420233
+  }
+}

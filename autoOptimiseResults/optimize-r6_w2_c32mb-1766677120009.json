@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r6_w2_c32mb",
+  "timestamp": "2025-12-25T15:38:40.009Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 8,
+    "readWorkers": 6,
+    "writeWorkers": 2,
+    "cacheSizeMB": 32,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 2150.7568437670698,
+    "writesPerSec": 214.64639159351998,
+    "opsPerSec": 2365.40323536059
+  }
+}

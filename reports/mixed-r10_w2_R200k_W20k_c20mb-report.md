@@ -1,6 +1,6 @@
 # Mixed Read/Write Benchmark: r10_w2_R200k_W20k_c20mb
 
-**Test Run:** 12/25/2025, 1:50:38 AM
+**Test Run:** 12/25/2025, 6:00:49 PM
 
 ## Configuration
 
@@ -22,42 +22,129 @@
 | Total | 200,000 | 20,000 | 220,000 |
 | Successful | 200,000 | 20,000 | - |
 | Success Rate | 100.0% | 100.0% | - |
-| Throughput | 8497/sec | 850/sec | 9347/sec |
-| Avg Latency | 0.57ms | 0.56ms | - |
-| P50 Latency | 0.38ms | 0.20ms | - |
-| P95 Latency | 1.08ms | 1.59ms | - |
-| P99 Latency | 1.59ms | 4.29ms | - |
+| Throughput | 7632/sec | 763/sec | 8395/sec |
+| Avg Latency | 0.59ms | 0.55ms | - |
+| P50 Latency | 0.52ms | 0.21ms | - |
+| P95 Latency | 1.08ms | 1.58ms | - |
+| P99 Latency | 1.51ms | 4.17ms | - |
 | Errors | 0 (busy: 0) | 0 (lock: 0) | - |
 
-**Total Duration:** 23.54 seconds
+**Total Duration:** 26.21 seconds
 
 ## Read Query Breakdown
 
 | Query Type | Count | Avg (ms) | P95 (ms) | P99 (ms) | Avg Rows |
 |------------|-------|----------|----------|----------|----------|
-| posts_for_user | 50,115 | 0.13 | 0.18 | 0.24 | 0.3 |
-| posts_in_timeframe | 50,193 | 0.88 | 1.09 | 1.43 | 100.0 |
-| single_post_with_details | 49,869 | 0.14 | 0.19 | 0.26 | 1.4 |
-| users_in_timeframe | 49,823 | 1.16 | 1.25 | 10.74 | 293.7 |
+| posts_for_user | 49,901 | 0.14 | 0.20 | 0.30 | 0.3 |
+| posts_in_timeframe | 50,098 | 0.95 | 1.17 | 1.57 | 100.0 |
+| single_post_with_details | 49,734 | 0.15 | 0.21 | 0.31 | 1.4 |
+| users_in_timeframe | 50,267 | 1.10 | 1.21 | 9.47 | 247.4 |
 
+
+## Charts
+
+### Read vs Write Latency Comparison
+
+This chart compares latency percentiles (P50, P95, P99) between read and write operations. It shows how read and write latencies differ under concurrent load.
+
+```mermaid
+xychart-beta
+    title "Read vs Write Latency Comparison"
+    x-axis ["P50", "P95", "P99"]
+    y-axis "Latency (ms)" 0 --> 5
+    line "Reads" [0.52, 1.08, 1.51]
+    line "Writes" [0.21, 1.58, 4.17]
+```
+
+### Throughput Comparison
+
+This chart compares the throughput of reads, writes, and combined operations. It shows the relative performance of read vs write operations.
+
+```mermaid
+xychart-beta
+    title "Throughput Comparison"
+    x-axis ["Reads", "Writes", "Combined"]
+    y-axis "Operations/sec" 0 --> 10000
+    bar [7632, 763, 8395]
+```
+
+### Average Latency by Query Type
+
+This chart shows the average latency for each read query type. It helps identify which queries are the slowest.
+
+```mermaid
+xychart-beta
+    title "Average Latency by Query Type"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "Avg Latency (ms)" 0 --> 2
+    bar [0.14, 0.95, 0.15, 1.10]
+```
+
+### P95 Latency by Query Type
+
+This chart shows the P95 latency (95th percentile) for each read query type. It highlights the worst-case performance for each query type.
+
+```mermaid
+xychart-beta
+    title "P95 Latency by Query Type"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "P95 Latency (ms)" 0 --> 2
+    bar [0.20, 1.17, 0.21, 1.21]
+```
+
+### Query Type Distribution
+
+This chart shows the distribution of query types executed during the test. It helps verify that queries are evenly distributed.
+
+```mermaid
+xychart-beta
+    title "Query Type Distribution"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "Count" 0 --> 100000
+    bar [49901, 50098, 49734, 50267]
+```
+
+### Error Rates
+
+This chart compares error rates between reads (SQLITE_BUSY errors) and writes (lock errors). It helps identify contention issues.
+
+```mermaid
+xychart-beta
+    title "Error Rates: Reads vs Writes"
+    x-axis ["Read Busy Errors", "Write Lock Errors"]
+    y-axis "Error Count" 0 --> 1
+    bar [0, 0]
+```
+
+### Success Rate Comparison
+
+This chart compares the success rate of read vs write operations. Both should ideally be at 100%.
+
+```mermaid
+xychart-beta
+    title "Success Rate: Reads vs Writes"
+    x-axis ["Reads", "Writes"]
+    y-axis "Success Rate (%)" 0 --> 100
+    bar [100.0, 100.0]
+```
 
 ## Key Observations
 
 ### Read Performance
 - **200,000** successful reads out of 200,000 (100.0% success rate)
-- Average read latency: **0.57ms**, P99: **1.59ms**
-- Read throughput: **8497 reads/sec**
+- Average read latency: **0.59ms**, P99: **1.51ms**
+- Read throughput: **7632 reads/sec**
 - ✅ No busy errors during reads (WAL mode working well)
 
 ### Write Performance
 - **20,000** successful writes out of 20,000 (100.0% success rate)
-- Average write latency: **0.56ms**, P99: **4.29ms**
-- Write throughput: **850 writes/sec**
+- Average write latency: **0.55ms**, P99: **4.17ms**
+- Write throughput: **763 writes/sec**
 - ✅ No lock errors during writes
 
 ### Combined Throughput
 - Total operations completed: **220,000**
-- Combined throughput: **9347 ops/sec**
+- Combined throughput: **8395 ops/sec**
 
 ## Raw Data
 
@@ -67,7 +154,7 @@
 ```json
 {
   "testName": "mixedReadWrite-r10_w2_R200k_W20k_c20mb",
-  "timestamp": "2025-12-24T20:20:38.015Z",
+  "timestamp": "2025-12-25T12:30:49.220Z",
   "configuration": {
     "id": "r10_w2_R200k_W20k_c20mb",
     "readWorkers": 10,
@@ -80,48 +167,48 @@
     "readWriteRatio": 10,
     "cacheSize": 20000
   },
-  "duration": 23537.572490000002,
+  "duration": 26205.873939999998,
   "reads": {
     "total": 200000,
     "successful": 200000,
     "errors": 0,
     "busyErrors": 0,
     "successRate": 100,
-    "avgTime": 0.574404734780001,
-    "minTime": 0.044422999999369495,
-    "maxTime": 39.44968300000028,
-    "p50": 0.37891499999977896,
-    "p95": 1.07943399999931,
-    "p99": 1.5859470000004876,
-    "readsPerSec": 8497.052960111774,
+    "avgTime": 0.5862970258799962,
+    "minTime": 0.04875499999980093,
+    "maxTime": 57.22629400000005,
+    "p50": 0.5228439999991679,
+    "p95": 1.0834259999974165,
+    "p99": 1.505484000001161,
+    "readsPerSec": 7631.876748621802,
     "byQueryType": {
       "posts_for_user": {
-        "count": 50115,
-        "avgTime": 0.12846574758056545,
-        "p95": 0.1835819999978412,
-        "p99": 0.2397370000007868,
-        "avgRowCount": 0.32445375636037116
+        "count": 49901,
+        "avgTime": 0.13933242967074772,
+        "p95": 0.2008720000012545,
+        "p99": 0.2984039999973902,
+        "avgRowCount": 0.319933468267169
       },
       "posts_in_timeframe": {
-        "count": 50193,
-        "avgTime": 0.8764665593608755,
-        "p95": 1.0861939999999777,
-        "p99": 1.4259790000005523,
+        "count": 50098,
+        "avgTime": 0.9546362359575151,
+        "p95": 1.1701499999981024,
+        "p99": 1.5708830000003218,
         "avgRowCount": 100
       },
       "single_post_with_details": {
-        "count": 49869,
-        "avgTime": 0.13604231849445092,
-        "p95": 0.19247299999915413,
-        "p99": 0.2564650000003894,
-        "avgRowCount": 1.4056828891696245
+        "count": 49734,
+        "avgTime": 0.14659066409296742,
+        "p95": 0.21278999999958614,
+        "p99": 0.31181400000014037,
+        "avgRowCount": 1.403587083283066
       },
       "users_in_timeframe": {
-        "count": 49823,
-        "avgTime": 1.1574193770146541,
-        "p95": 1.25057599999991,
-        "p99": 10.739024999998946,
-        "avgRowCount": 293.67025269453865
+        "count": 50267,
+        "avgTime": 1.097950372331745,
+        "p95": 1.2076519999973243,
+        "p99": 9.472780000000057,
+        "avgRowCount": 247.39286211629897
       }
     }
   },
@@ -131,17 +218,17 @@
     "errors": 0,
     "lockErrors": 0,
     "successRate": 100,
-    "avgTime": 0.5634792866500018,
-    "minTime": 0.08229000000028464,
-    "maxTime": 58.43028400000003,
-    "p50": 0.20263400000021647,
-    "p95": 1.5862809999998717,
-    "p99": 4.292425999999978,
-    "writesPerSec": 849.7052960111776
+    "avgTime": 0.5525944789500059,
+    "minTime": 0.06146000000080676,
+    "maxTime": 108.3297279999988,
+    "p50": 0.2072350000003098,
+    "p95": 1.5786459999999352,
+    "p99": 4.168026999999711,
+    "writesPerSec": 763.1876748621802
   },
   "combined": {
     "totalOps": 220000,
-    "opsPerSec": 9346.758256122952
+    "opsPerSec": 8395.064423483982
   }
 }
 ```

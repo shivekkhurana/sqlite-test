@@ -8,11 +8,17 @@ import { setupTables } from "../../src/db.js";
  * Configuration:
  * - PRAGMA journal_mode = WAL
  * - PRAGMA synchronous = NORMAL
+ * - PRAGMA temp_store = memory (database-level, set here)
  * - PRAGMA cache_size = -16000 (16MB page cache)
  * 
  * Connection-level pragmas (set by workers):
  * - PRAGMA busy_timeout = 2000ms
  * - PRAGMA wal_autocheckpoint = 4000
+ * - PRAGMA mmap_size = 1000000000 (1GB, connection-level, set in worker)
+ * 
+ * Additional optimizations:
+ * - temp_store = memory: Stores temporary tables and indices in memory instead of disk
+ * - mmap_size = 1GB: Uses memory-mapped I/O for faster reads
  * 
  * Seeds the database with initial data for read queries.
  */
@@ -36,6 +42,7 @@ export function setup(dbPath: string): SeedResult {
     // Database-level pragmas
     db.pragma('journal_mode = WAL');
     db.pragma('synchronous = NORMAL');
+    db.pragma('temp_store = memory');
     db.pragma('cache_size = -16000'); // 16MB page cache
     
     // Create tables

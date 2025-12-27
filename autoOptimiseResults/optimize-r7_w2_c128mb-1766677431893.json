@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r7_w2_c128mb",
+  "timestamp": "2025-12-25T15:43:51.893Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 9,
+    "readWorkers": 7,
+    "writeWorkers": 2,
+    "cacheSizeMB": 128,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1230.3010504021606,
+    "writesPerSec": 122.90719784237368,
+    "opsPerSec": 1353.2082482445344
+  }
+}

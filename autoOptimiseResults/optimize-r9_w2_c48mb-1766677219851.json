@@ -1,0 +1,18 @@
+{
+  "testName": "optimize-r9_w2_c48mb",
+  "timestamp": "2025-12-25T15:40:19.851Z",
+  "isBest": false,
+  "configuration": {
+    "totalWorkers": 11,
+    "readWorkers": 9,
+    "writeWorkers": 2,
+    "cacheSizeMB": 48,
+    "totalReads": 2000,
+    "totalWrites": 200
+  },
+  "results": {
+    "readsPerSec": 1423.8642594090525,
+    "writesPerSec": 141.88981160030417,
+    "opsPerSec": 1565.7540710093567
+  }
+}

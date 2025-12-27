@@ -8,12 +8,14 @@ import type { WriteTask } from "../../src/workerCore.js";
  * Opens database with connection-level pragmas:
  * - busy_timeout = 2000ms
  * - wal_autocheckpoint = 4000
+ * - mmap_size = 1000000000 (1GB)
  * - cache_size = configurable (default -16000 = 16MB)
  */
 export default function worker(task: WriteTask) {
     const db = new Database(task.dbPath);
     db.pragma('busy_timeout = 2000');
     db.pragma('wal_autocheckpoint = 4000');
+    db.pragma('mmap_size = 1000000000');
     db.pragma(`cache_size = ${task.cacheSize ?? -16000}`);
     return executeWrite(db, task);
 }

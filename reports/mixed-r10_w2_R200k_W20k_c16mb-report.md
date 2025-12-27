@@ -41,6 +41,93 @@
 | users_in_timeframe | 49,992 | 1.21 | 1.58 | 11.39 | 283.7 |
 
 
+## Charts
+
+### Read vs Write Latency Comparison
+
+This chart compares latency percentiles (P50, P95, P99) between read and write operations. It shows how read and write latencies differ under concurrent load.
+
+```mermaid
+xychart-beta
+    title "Read vs Write Latency Comparison"
+    x-axis ["P50", "P95", "P99"]
+    y-axis "Latency (ms)" 0 --> 5
+    line "Reads" [0.52, 1.12, 3.38]
+    line "Writes" [0.21, 1.68, 4.45]
+```
+
+### Throughput Comparison
+
+This chart compares the throughput of reads, writes, and combined operations. It shows the relative performance of read vs write operations.
+
+```mermaid
+xychart-beta
+    title "Throughput Comparison"
+    x-axis ["Reads", "Writes", "Combined"]
+    y-axis "Operations/sec" 0 --> 10000
+    bar [7704, 770, 8475]
+```
+
+### Average Latency by Query Type
+
+This chart shows the average latency for each read query type. It helps identify which queries are the slowest.
+
+```mermaid
+xychart-beta
+    title "Average Latency by Query Type"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "Avg Latency (ms)" 0 --> 2
+    bar [0.15, 0.97, 0.15, 1.21]
+```
+
+### P95 Latency by Query Type
+
+This chart shows the P95 latency (95th percentile) for each read query type. It highlights the worst-case performance for each query type.
+
+```mermaid
+xychart-beta
+    title "P95 Latency by Query Type"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "P95 Latency (ms)" 0 --> 2
+    bar [0.21, 1.25, 0.22, 1.58]
+```
+
+### Query Type Distribution
+
+This chart shows the distribution of query types executed during the test. It helps verify that queries are evenly distributed.
+
+```mermaid
+xychart-beta
+    title "Query Type Distribution"
+    x-axis ["posts for user", "posts in timeframe", "single post with details", "users in timeframe"]
+    y-axis "Count" 0 --> 100000
+    bar [50105, 50110, 49793, 49992]
+```
+
+### Error Rates
+
+This chart compares error rates between reads (SQLITE_BUSY errors) and writes (lock errors). It helps identify contention issues.
+
+```mermaid
+xychart-beta
+    title "Error Rates: Reads vs Writes"
+    x-axis ["Read Busy Errors", "Write Lock Errors"]
+    y-axis "Error Count" 0 --> 1
+    bar [0, 0]
+```
+
+### Success Rate Comparison
+
+This chart compares the success rate of read vs write operations. Both should ideally be at 100%.
+
+```mermaid
+xychart-beta
+    title "Success Rate: Reads vs Writes"
+    x-axis ["Reads", "Writes"]
+    y-axis "Success Rate (%)" 0 --> 100
+    bar [100.0, 100.0]
+```
+
 ## Key Observations
 
 ### Read Performance
