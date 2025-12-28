@@ -1,0 +1,80 @@
+{
+  "testName": "mixedReadWrite-r1_w1_R1.0m_W131.1k_c64mb",
+  "timestamp": "2025-12-27T13:41:13.188Z",
+  "configuration": {
+    "id": "r1_w1_R1.0m_W131.1k_c64mb",
+    "totalWorkers": 2,
+    "readWorkers": 1,
+    "writeWorkers": 1,
+    "readsPerWorker": 1048576,
+    "writesPerWorker": 131072,
+    "totalReads": 1048576,
+    "totalWrites": 131072,
+    "totalOperations": 1179648,
+    "readWriteRatio": 8,
+    "cacheSize": -64000
+  },
+  "duration": 947050.369984,
+  "reads": {
+    "total": 1048576,
+    "successful": 1048576,
+    "errors": 0,
+    "busyErrors": 0,
+    "successRate": 100,
+    "avgTime": 0.22271887561793002,
+    "minTime": 0.048328000000765314,
+    "maxTime": 12.91521400003694,
+    "p50": 0.20201699994504452,
+    "p95": 0.4684869999764487,
+    "p99": 0.5650330000789836,
+    "readsPerSec": 1107.2019326888762,
+    "byQueryType": {
+      "posts_for_user": {
+        "count": 262194,
+        "avgTime": 0.09911375152362016,
+        "p95": 0.14432800002396107,
+        "p99": 0.19127599999774247,
+        "avgRowCount": 0.5198402709444152
+      },
+      "posts_in_timeframe": {
+        "count": 262658,
+        "avgTime": 0.42201121418724696,
+        "p95": 0.5423099999898113,
+        "p99": 0.7186519999522716,
+        "avgRowCount": 100
+      },
+      "single_post_with_details": {
+        "count": 262149,
+        "avgTime": 0.09961399033751343,
+        "p95": 0.14311199996154755,
+        "p99": 0.18960300006438047,
+        "avgRowCount": 2.302823966522855
+      },
+      "users_in_timeframe": {
+        "count": 261575,
+        "avgTime": 0.26987406022737215,
+        "p95": 0.35271299991291016,
+        "p99": 0.4578650000039488,
+        "avgRowCount": 100
+      }
+    }
+  },
+  "writes": {
+    "total": 131072,
+    "successful": 131072,
+    "errors": 0,
+    "lockErrors": 0,
+    "successRate": 100,
+    "avgTime": 0.31529142790209236,
+    "minTime": 0.0625,
+    "maxTime": 38.15984200002276,
+    "p50": 0.2930300000589341,
+    "p95": 0.4524919999530539,
+    "p99": 1.382480000029318,
+    "writesPerSec": 138.40024158610953
+  },
+  "combined": {
+    "totalOps": 1179648,
+    "opsPerSec": 1245.6021742749856
+  }
+}

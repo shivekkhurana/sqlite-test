@@ -1,0 +1,80 @@
+{
+  "testName": "mixedReadWrite-r4_w2_RNaN_W100k_c64mb",
+  "timestamp": "2025-12-27T17:06:22.322Z",
+  "configuration": {
+    "id": "r4_w2_RNaN_W100k_c64mb",
+    "totalWorkers": 6,
+    "readWorkers": 4,
+    "writeWorkers": 2,
+    "readsPerWorker": null,
+    "writesPerWorker": 50000,
+    "totalReads": null,
+    "totalWrites": 100000,
+    "totalOperations": null,
+    "readWriteRatio": null,
+    "cacheSize": -64000
+  },
+  "duration": 28572.751882,
+  "reads": {
+    "total": 0,
+    "successful": 0,
+    "errors": 0,
+    "busyErrors": 0,
+    "successRate": 0,
+    "avgTime": 0,
+    "minTime": 0,
+    "maxTime": 0,
+    "p50": 0,
+    "p95": 0,
+    "p99": 0,
+    "readsPerSec": 0,
+    "byQueryType": {
+      "posts_for_user": {
+        "count": 0,
+        "avgTime": 0,
+        "p95": 0,
+        "p99": 0,
+        "avgRowCount": 0
+      },
+      "posts_in_timeframe": {
+        "count": 0,
+        "avgTime": 0,
+        "p95": 0,
+        "p99": 0,
+        "avgRowCount": 0
+      },
+      "single_post_with_details": {
+        "count": 0,
+        "avgTime": 0,
+        "p95": 0,
+        "p99": 0,
+        "avgRowCount": 0
+      },
+      "users_in_timeframe": {
+        "count": 0,
+        "avgTime": 0,
+        "p95": 0,
+        "p99": 0,
+        "avgRowCount": 0
+      }
+    }
+  },
+  "writes": {
+    "total": 100000,
+    "successful": 100000,
+    "errors": 0,
+    "lockErrors": 0,
+    "successRate": 100,
+    "avgTime": 1.146299643149998,
+    "minTime": 0.04496199999994133,
+    "maxTime": 1493.8228749999998,
+    "p50": 0.11351700000159326,
+    "p95": 3.5053179999995336,
+    "p99": 20.060084000000643,
+    "writesPerSec": 3499.8379019627114
+  },
+  "combined": {
+    "totalOps": 100000,
+    "opsPerSec": 3499.8379019627114
+  }
+}

@@ -16,13 +16,12 @@ const projectRoot = join(__dirname, "..");
 const program = new Command();
 program.version("0.0.1");
 
-// Test configuration
-const USER_COUNT = 10000;
-const POST_COUNT = 40000;
-const TAG_COUNT = 10000;
-const USER_POST_COUNT = 30000;
-const POST_TAG_COUNT = 10000;
-const TOTAL_WRITES = USER_COUNT + POST_COUNT + TAG_COUNT + USER_POST_COUNT + POST_TAG_COUNT;
+const USER_COUNT = 1000;
+const POST_COUNT = 4000;
+const TAG_COUNT = 1000;
+const USER_POST_COUNT = 3000;
+const POST_TAG_COUNT = 1000;
+const TOTAL_WRITES = USER_COUNT + POST_COUNT + TAG_COUNT + USER_POST_COUNT + POST_TAG_COUNT; // 10,000 total
 const CONCURRENCY_LEVELS = [1, 2, 4, 8, 16, 32, 64, 128];
 
 // Scenario configuration
@@ -153,6 +152,9 @@ function calculateMetrics(results: WriteResult[], totalDuration: number) {
         lockErrors: lockErrors.length,
         successRate: (successful.length / TOTAL_WRITES) * 100,
         avgTime: durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0,
+        minTime: durations.length > 0 ? durations[0]! : 0,
+        maxTime: durations.length > 0 ? durations[durations.length - 1]! : 0,
+        p50: durations[Math.floor(durations.length * 0.50)] ?? 0,
         p95: durations[Math.floor(durations.length * 0.95)] ?? 0,
         p99: durations[Math.floor(durations.length * 0.99)] ?? 0,
         writesPerSec: totalDuration > 0 ? (successful.length / totalDuration) * 1000 : 0,
@@ -342,6 +344,9 @@ async function runScenario(config: ScenarioConfig) {
                     lockErrors: 0,
                     successRate: 0,
                     avgTime: 0,
+                    minTime: 0,
+                    maxTime: 0,
+                    p50: 0,
                     p95: 0,
                     p99: 0,
                     writesPerSec: 0,
@@ -687,14 +692,16 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     const resultFile = `mixed-${id}.json`;
     const setupPath = join(projectRoot, "scenarios", "mixedReadWrite", "setup.ts");
     
+    // Total numbers
     const totalReads = readWorkers * readsPerWorker;
     const totalWrites = writeWorkers * writesPerWorker;
+    const totalWorkers = readWorkers + writeWorkers;
     
     console.log(`\n=== Mixed Read/Write Benchmark [${id}] ===`);
-    console.log(`Read workers: ${readWorkers} × ${readsPerWorker} = ${totalReads.toLocaleString()} reads`);
-    console.log(`Write workers: ${writeWorkers} × ${writesPerWorker} = ${totalWrites.toLocaleString()} writes`);
-    console.log(`Total operations: ${(totalReads + totalWrites).toLocaleString()}`);
-    console.log(`Read:Write ratio: ${(totalReads / totalWrites).toFixed(1)}:1`);
+    console.log(`Total Workers: ${totalWorkers} (mixed capability)`);
+    console.log(`Total Operations: ${(totalReads + totalWrites).toLocaleString()}`);
+    console.log(`  - Reads: ${totalReads.toLocaleString()} (${((totalReads / (totalReads + totalWrites)) * 100).toFixed(1)}%)`);
+    console.log(`  - Writes: ${totalWrites.toLocaleString()} (${((totalWrites / (totalReads + totalWrites)) * 100).toFixed(1)}%)`);
     console.log(`Cache size: ${Math.abs(cacheSize)} KB (${Math.abs(cacheSize) / 1000} MB)`);
     
     // Delete and setup database
@@ -706,117 +713,113 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     const { setup } = await import(setupPath);
     const { userIds, postIds, tagIds } = setup(dbPath) as { userIds: number[]; postIds: number[]; tagIds: number[] };
     
-    // Create read worker pools (one pool per worker with 1 thread each)
-    console.log(`\nSpawning ${readWorkers} read workers...`);
-    const readPools: Piscina[] = [];
-    for (let i = 0; i < readWorkers; i++) {
-        readPools.push(new Piscina({
-            filename: join(projectRoot, "scenarios", "mixedReadWrite", "readWorker.ts"),
+    // Generate ALL tasks
+    console.log("Generating tasks...");
+    const allTasks: (ReadTask | WriteTask)[] = [];
+    
+    // Generate Read Tasks
+    for (let i = 0; i < totalReads; i++) {
+        allTasks.push(generateReadTask(dbPath, userIds, postIds, cacheSize));
+    }
+    
+    // Generate Write Tasks
+    for (let i = 0; i < totalWrites; i++) {
+        allTasks.push(generateWriteTask(dbPath, userIds, postIds, tagIds, cacheSize));
+    }
+    
+    // Shuffle tasks (Fisher-Yates)
+    console.log("Shuffling tasks...");
+    for (let i = allTasks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = allTasks[i]!;
+        allTasks[i] = allTasks[j]!;
+        allTasks[j] = temp;
+    }
+    
+    // Create mixed worker pools
+    console.log(`\nSpawning ${totalWorkers} mixed workers...`);
+    const pools: Piscina[] = [];
+    for (let i = 0; i < totalWorkers; i++) {
+        pools.push(new Piscina({
+            filename: join(projectRoot, "scenarios", "mixedReadWrite", "mixedWorker.ts"),
             maxThreads: 1,
             minThreads: 1,
             execArgv: ["--import", "tsx"]
         }));
     }
     
-    // Create write worker pools
-    console.log(`Spawning ${writeWorkers} write workers...`);
-    const writePools: Piscina[] = [];
-    for (let i = 0; i < writeWorkers; i++) {
-        writePools.push(new Piscina({
-            filename: join(projectRoot, "scenarios", "mixedReadWrite", "writeWorker.ts"),
-            maxThreads: 1,
-            minThreads: 1,
-            execArgv: ["--import", "tsx"]
-        }));
-    }
+    // Distribute tasks to workers
+    const workerTasks: (ReadTask | WriteTask)[][] = Array.from({ length: totalWorkers }, () => []);
+    allTasks.forEach((task, index) => {
+        workerTasks[index % totalWorkers]!.push(task);
+    });
     
-    let allReadResults: ReadResult[] = [];
-    let allWriteResults: WriteResult[] = [];
-    
-    console.log("\nStarting benchmark (all workers fire simultaneously)...");
+    console.log("\nStarting benchmark...");
     const startTime = performance.now();
+    let completedOps = 0;
+    const totalOps = allTasks.length;
     
-    try {
-        // Create promises for all read operations
-        const readPromises: Promise<ReadResult>[] = [];
-        for (let w = 0; w < readWorkers; w++) {
-            const pool = readPools[w]!;
-            for (let i = 0; i < readsPerWorker; i++) {
-                const task = generateReadTask(dbPath, userIds, postIds, cacheSize);
-                readPromises.push(
-                    pool.run(task).catch((error): ReadResult => ({
-                        success: false,
-                        duration: 0,
-                        rowCount: 0,
-                        queryType: task.queryType,
-                        error: String(error),
-                        errorCode: "WORKER_ERROR"
-                    }))
-                );
-            }
-        }
-        
-        // Create promises for all write operations
-        const writePromises: Promise<WriteResult>[] = [];
-        for (let w = 0; w < writeWorkers; w++) {
-            const pool = writePools[w]!;
-            for (let i = 0; i < writesPerWorker; i++) {
-                const task = generateWriteTask(dbPath, userIds, postIds, tagIds, cacheSize);
-                writePromises.push(
-                    pool.run(task).catch((error): WriteResult => ({
-                        success: false,
-                        duration: 0,
-                        error: String(error),
-                        errorCode: "WORKER_ERROR"
-                    }))
-                );
-            }
-        }
-        
-        // Progress tracking
-        let completedReads = 0;
-        let completedWrites = 0;
-        const progressInterval = setInterval(() => {
-            const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
-            console.log(`  [${elapsed}s] Reads: ${completedReads.toLocaleString()}/${totalReads.toLocaleString()}, Writes: ${completedWrites.toLocaleString()}/${totalWrites.toLocaleString()}`);
-        }, 5000);
-        
-        // Track read completions
-        const trackedReadPromises = readPromises.map(p => 
-            p.then(r => { completedReads++; return r; })
-        );
-        
-        // Track write completions
-        const trackedWritePromises = writePromises.map(p => 
-            p.then(r => { completedWrites++; return r; })
-        );
-        
-        // Wait for all operations
-        const [readResults, writeResults] = await Promise.all([
-            Promise.all(trackedReadPromises),
-            Promise.all(trackedWritePromises)
-        ]);
-        
-        clearInterval(progressInterval);
-        
-        // Assign directly instead of spread to avoid stack overflow with large arrays
-        allReadResults = readResults;
-        allWriteResults = writeResults;
-        
-    } finally {
-        // Destroy all pools
-        await Promise.all([
-            ...readPools.map(p => p.destroy()),
-            ...writePools.map(p => p.destroy())
-        ]);
-    }
+    // Run workers
+    const workerPromises = pools.map((pool, index) => {
+        const tasks = workerTasks[index]!;
+        return (async () => {
+             const results: (ReadResult | WriteResult)[] = [];
+             for (const task of tasks) {
+                 try {
+                     const result = await pool.run(task);
+                     results.push(result);
+                 } catch (err) {
+                     // Create a failure result matching the type
+                     if ('queryType' in task) {
+                         results.push({
+                             success: false,
+                             duration: 0,
+                             rowCount: 0,
+                             queryType: task.queryType,
+                             error: String(err),
+                             errorCode: "WORKER_ERROR"
+                         } as ReadResult);
+                     } else {
+                         results.push({
+                             success: false,
+                             duration: 0,
+                             error: String(err),
+                             errorCode: "WORKER_ERROR"
+                         } as WriteResult);
+                     }
+                 }
+                 completedOps++;
+             }
+             return results;
+        })();
+    });
+    
+    // Log progress
+    const progressInterval = setInterval(() => {
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+        const percent = ((completedOps / totalOps) * 100).toFixed(1);
+        console.log(`  [${elapsed}s] ${completedOps.toLocaleString()}/${totalOps.toLocaleString()} ops (${percent}%)`);
+    }, 2000);
+    
+    const workerResults = await Promise.all(workerPromises);
+    clearInterval(progressInterval);
     
     const totalDuration = performance.now() - startTime;
     
-    // Calculate metrics
-    const readMetrics = calculateReadMetrics(allReadResults, totalDuration);
-    const writeMetrics = calculateWriteMetricsForMixed(allWriteResults, totalDuration);
+    // Clean up pools
+    await Promise.all(pools.map(p => p.destroy()));
     
+    // Flatten results
+    const flatResults = workerResults.flat();
+    
+    // Separate results
+    const readResults = flatResults.filter((r): r is ReadResult => 'queryType' in r);
+    const writeResults = flatResults.filter((r): r is WriteResult => !('queryType' in r));
+    
+    // Calculate metrics
+    const readMetrics = calculateReadMetrics(readResults, totalDuration);
+    const writeMetrics = calculateWriteMetricsForMixed(writeResults, totalDuration);
+        
     // Print results
     console.log(`\n=== Results ===`);
     console.log(`Total duration: ${(totalDuration / 1000).toFixed(2)}s`);
@@ -825,7 +828,7 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     console.log(`\n--- Reads ---`);
     console.log(`  Success: ${readMetrics.successful.toLocaleString()}/${readMetrics.total.toLocaleString()} (${readMetrics.successRate.toFixed(1)}%)`);
     console.log(`  Throughput: ${readMetrics.readsPerSec.toFixed(0)} reads/sec`);
-    console.log(`  Latency: avg=${readMetrics.avgTime.toFixed(2)}ms, p50=${readMetrics.p50.toFixed(2)}ms, p95=${readMetrics.p95.toFixed(2)}ms, p99=${readMetrics.p99.toFixed(2)}ms`);
+    console.log(`  Latency: avg=${readMetrics.avgTime.toFixed(2)}ms, p50=${readMetrics.p50.toFixed(2)}ms, p95=${readMetrics.p95.toFixed(2)}ms, p99=${readMetrics.p99.toFixed(2)}ms`); 
     console.log(`  Errors: ${readMetrics.errors} (busy: ${readMetrics.busyErrors})`);
     console.log(`  By query type:`);
     for (const [qt, stats] of Object.entries(readMetrics.byQueryType)) {
@@ -835,7 +838,7 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     console.log(`\n--- Writes ---`);
     console.log(`  Success: ${writeMetrics.successful.toLocaleString()}/${writeMetrics.total.toLocaleString()} (${writeMetrics.successRate.toFixed(1)}%)`);
     console.log(`  Throughput: ${writeMetrics.writesPerSec.toFixed(0)} writes/sec`);
-    console.log(`  Latency: avg=${writeMetrics.avgTime.toFixed(2)}ms, p50=${writeMetrics.p50.toFixed(2)}ms, p95=${writeMetrics.p95.toFixed(2)}ms, p99=${writeMetrics.p99.toFixed(2)}ms`);
+    console.log(`  Latency: avg=${writeMetrics.avgTime.toFixed(2)}ms, p50=${writeMetrics.p50.toFixed(2)}ms, p95=${writeMetrics.p95.toFixed(2)}ms, p99=${writeMetrics.p99.toFixed(2)}ms`); 
     console.log(`  Errors: ${writeMetrics.errors} (locks: ${writeMetrics.lockErrors})`);
     
     // Save results
@@ -845,7 +848,8 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
         timestamp: new Date().toISOString(),
         configuration: {
             id,
-            readWorkers,
+            totalWorkers,
+            readWorkers, // Keeping original config for reference
             writeWorkers,
             readsPerWorker,
             writesPerWorker,
@@ -870,6 +874,9 @@ async function runMixedReadWrite(options: MixedReadWriteOptions) {
     );
     
     console.log(`\nResults saved to results/${resultFile}`);
+    
+    // Force exit to ensure we don't hang on pool cleanup
+    process.exit(0);
 }
 
 /**
@@ -930,6 +937,9 @@ program.command("mixedReadWrite")
             writesPerWorker,
             cacheSize
         });
+        
+        // Force exit to kill any pending read promises/workers that might be hanging
+        process.exit(0);
     });
 
 async function runTursoReadWrite(options: MixedReadWriteOptions) {

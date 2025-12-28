@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SQLite Mixed Workload Benchmark</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; background: #f4f4f9; color: #333; }
+    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { margin-bottom: 10px; }
+    .meta { color: #666; margin-bottom: 40px; }
+    .section { margin-bottom: 60px; padding-top: 20px; border-top: 1px solid #eee; }
+    .section h2 { margin-bottom: 20px; color: #2c3e50; }
+    .chart-container { margin-bottom: 40px; }
+    .description { margin-bottom: 15px; color: #555; line-height: 1.6; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9em; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+    th { background-color: #f8f9fa; }
+    tr:hover { background-color: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SQLite Mixed Workload Benchmark</h1>
+    <div class="meta">Generated: 12/27/2025, 9:38:20 PM</div>
+
+    <div class="section">
+      <h2>Part 1: Concurrency Scaling (Fixed RAM: 64MB)</h2>
+      <div class="description">
+        Analysis of performance scaling from 2 to 64 concurrent workers with a fixed 64MB page cache.
+      </div>
+
+      <div class="chart-container">
+        <h3>Throughput (Ops/Sec)</h3>
+        <div id="chart-throughput-0q1d1nvv4"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "workers": 2,
+        "opsPerSec": 1245.6021742749856,
+        "readP99": 0.5650330000789836,
+        "writeP99": 1.382480000029318
+      },
+      {
+        "workers": 4,
+        "opsPerSec": 4114.854974575331,
+        "readP99": 0.8443799999949988,
+        "writeP99": 1.4680560000124387
+      },
+      {
+        "workers": 6,
+        "opsPerSec": 3088.82056844212,
+        "readP99": 5.5767540000379086,
+        "writeP99": 5.115320000011707
+      },
+      {
+        "workers": 8,
+        "opsPerSec": 9360.751065511678,
+        "readP99": 0.9107289999956265,
+        "writeP99": 3.429433000004792
+      },
+      {
+        "workers": 10,
+        "opsPerSec": 7960.46150186955,
+        "readP99": 2.7917270000034478,
+        "writeP99": 4.021329000010155
+      },
+      {
+        "workers": 12,
+        "opsPerSec": 7773.1977336763675,
+        "readP99": 4.715248000000429,
+        "writeP99": 8.711505000013858
+      },
+      {
+        "workers": 14,
+        "opsPerSec": 9393.377768364258,
+        "readP99": 1.8022000000055414,
+        "writeP99": 8.900903000001563
+      },
+      {
+        "workers": 16,
+        "opsPerSec": 5723.250623995946,
+        "readP99": 6.622467000008328,
+        "writeP99": 14.543749000004027
+      },
+      {
+        "workers": 20,
+        "opsPerSec": 6506.370298305349,
+        "readP99": 5.058118999993894,
+        "writeP99": 21.820833000005223
+      },
+      {
+        "workers": 24,
+        "opsPerSec": 8859.443187278357,
+        "readP99": 2.84113200000138,
+        "writeP99": 37.28009900000325
+      },
+      {
+        "workers": 30,
+        "opsPerSec": 7730.886710497171,
+        "readP99": 3.999370999998064,
+        "writeP99": 87.46703899998101
+      },
+      {
+        "workers": 32,
+        "opsPerSec": 8189.163949651795,
+        "readP99": 3.958161000002292,
+        "writeP99": 106.94816800000262
+      },
+      {
+        "workers": 64,
+        "opsPerSec": 7653.231184300172,
+        "readP99": 5.767187000004924,
+        "writeP99": 677.0870149999973
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "workers",
+      "type": "quantitative",
+      "title": "Total Workers"
+    },
+    "y": {
+      "field": "opsPerSec",
+      "type": "quantitative",
+      "title": "Total Ops / Sec"
+    }
+  }
+};
+  vegaEmbed('#chart-throughput-0q1d1nvv4', spec);
+</script>
+      </div>
+      
+      <div class="chart-container">
+        <h3>P99 Latency Comparison (Read vs Write)</h3>
+        <div id="chart-p99-m7hcggjkk"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 2,
+        "readP99": 0.5650330000789836,
+        "writeP99": 1.382480000029318
+      },
+      {
+        "x": 4,
+        "readP99": 0.8443799999949988,
+        "writeP99": 1.4680560000124387
+      },
+      {
+        "x": 6,
+        "readP99": 5.5767540000379086,
+        "writeP99": 5.115320000011707
+      },
+      {
+        "x": 8,
+        "readP99": 0.9107289999956265,
+        "writeP99": 3.429433000004792
+      },
+      {
+        "x": 10,
+        "readP99": 2.7917270000034478,
+        "writeP99": 4.021329000010155
+      },
+      {
+        "x": 12,
+        "readP99": 4.715248000000429,
+        "writeP99": 8.711505000013858
+      },
+      {
+        "x": 14,
+        "readP99": 1.8022000000055414,
+        "writeP99": 8.900903000001563
+      },
+      {
+        "x": 16,
+        "readP99": 6.622467000008328,
+        "writeP99": 14.543749000004027
+      },
+      {
+        "x": 20,
+        "readP99": 5.058118999993894,
+        "writeP99": 21.820833000005223
+      },
+      {
+        "x": 24,
+        "readP99": 2.84113200000138,
+        "writeP99": 37.28009900000325
+      },
+      {
+        "x": 30,
+        "readP99": 3.999370999998064,
+        "writeP99": 87.46703899998101
+      },
+      {
+        "x": 32,
+        "readP99": 3.958161000002292,
+        "writeP99": 106.94816800000262
+      },
+      {
+        "x": 64,
+        "readP99": 5.767187000004924,
+        "writeP99": 677.0870149999973
+      }
+    ]
+  },
+  "transform": [
+    {
+      "fold": [
+        "readP99",
+        "writeP99"
+      ],
+      "as": [
+        "Type",
+        "Latency"
+      ]
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Total Workers"
+    },
+    "y": {
+      "field": "Latency",
+      "type": "quantitative",
+      "title": "P99 Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "Type",
+      "type": "nominal"
+    }
+  }
+};
+  vegaEmbed('#chart-p99-m7hcggjkk', spec);
+</script>
+      </div>
+
+      <div class="chart-container">
+        <h3>Detailed Read Latency (ms)</h3>
+        <div id="chart-latency-wihf89mgk"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 2,
+        "metric": "Min",
+        "latency": 0.048328000000765314
+      },
+      {
+        "x": 2,
+        "metric": "Avg",
+        "latency": 0.22271887561793002
+      },
+      {
+        "x": 2,
+        "metric": "P50",
+        "latency": 0.20201699994504452
+      },
+      {
+        "x": 2,
+        "metric": "P99",
+        "latency": 0.5650330000789836
+      },
+      {
+        "x": 2,
+        "metric": "Max",
+        "latency": 12.91521400003694
+      },
+      {
+        "x": 4,
+        "metric": "Min",
+        "latency": 0.03982999999425374
+      },
+      {
+        "x": 4,
+        "metric": "Avg",
+        "latency": 0.2690503588269431
+      },
+      {
+        "x": 4,
+        "metric": "P50",
+        "latency": 0.24192000000039116
+      },
+      {
+        "x": 4,
+        "metric": "P99",
+        "latency": 0.8443799999949988
+      },
+      {
+        "x": 4,
+        "metric": "Max",
+        "latency": 3.4239250000100583
+      },
+      {
+        "x": 6,
+        "metric": "Min",
+        "latency": 0.041546000000380445
+      },
+      {
+        "x": 6,
+        "metric": "Avg",
+        "latency": 0.9232810004255276
+      },
+      {
+        "x": 6,
+        "metric": "P50",
+        "latency": 0.40551099999720464
+      },
+      {
+        "x": 6,
+        "metric": "P99",
+        "latency": 5.5767540000379086
+      },
+      {
+        "x": 6,
+        "metric": "Max",
+        "latency": 50.18598900001962
+      },
+      {
+        "x": 8,
+        "metric": "Min",
+        "latency": 0.04391399999985879
+      },
+      {
+        "x": 8,
+        "metric": "Avg",
+        "latency": 0.35963139076466616
+      },
+      {
+        "x": 8,
+        "metric": "P50",
+        "latency": 0.3063459999993938
+      },
+      {
+        "x": 8,
+        "metric": "P99",
+        "latency": 0.9107289999956265
+      },
+      {
+        "x": 8,
+        "metric": "Max",
+        "latency": 21.37514299999748
+      },
+      {
+        "x": 10,
+        "metric": "Min",
+        "latency": 0.04489800000010291
+      },
+      {
+        "x": 10,
+        "metric": "Avg",
+        "latency": 0.579021995454987
+      },
+      {
+        "x": 10,
+        "metric": "P50",
+        "latency": 0.4533519999968121
+      },
+      {
+        "x": 10,
+        "metric": "P99",
+        "latency": 2.7917270000034478
+      },
+      {
+        "x": 10,
+        "metric": "Max",
+        "latency": 26.069272000000637
+      },
+      {
+        "x": 12,
+        "metric": "Min",
+        "latency": 0.04688700000042445
+      },
+      {
+        "x": 12,
+        "metric": "Avg",
+        "latency": 0.7076923415313783
+      },
+      {
+        "x": 12,
+        "metric": "P50",
+        "latency": 0.5058159999898635
+      },
+      {
+        "x": 12,
+        "metric": "P99",
+        "latency": 4.715248000000429
+      },
+      {
+        "x": 12,
+        "metric": "Max",
+        "latency": 99.34007800000109
+      },
+      {
+        "x": 14,
+        "metric": "Min",
+        "latency": 0.048381000000517815
+      },
+      {
+        "x": 14,
+        "metric": "Avg",
+        "latency": 0.6701941778388022
+      },
+      {
+        "x": 14,
+        "metric": "P50",
+        "latency": 0.5461190000060014
+      },
+      {
+        "x": 14,
+        "metric": "P99",
+        "latency": 1.8022000000055414
+      },
+      {
+        "x": 14,
+        "metric": "Max",
+        "latency": 118.79362399999809
+      },
+      {
+        "x": 16,
+        "metric": "Min",
+        "latency": 0.05044900000029884
+      },
+      {
+        "x": 16,
+        "metric": "Avg",
+        "latency": 1.346927951356575
+      },
+      {
+        "x": 16,
+        "metric": "P50",
+        "latency": 0.9566219999978784
+      },
+      {
+        "x": 16,
+        "metric": "P99",
+        "latency": 6.622467000008328
+      },
+      {
+        "x": 16,
+        "metric": "Max",
+        "latency": 90.98276600000099
+      },
+      {
+        "x": 20,
+        "metric": "Min",
+        "latency": 0.04899899999873014
+      },
+      {
+        "x": 20,
+        "metric": "Avg",
+        "latency": 1.3388296904445798
+      },
+      {
+        "x": 20,
+        "metric": "P50",
+        "latency": 1.0898920000036014
+      },
+      {
+        "x": 20,
+        "metric": "P99",
+        "latency": 5.058118999993894
+      },
+      {
+        "x": 20,
+        "metric": "Max",
+        "latency": 37.081830999999966
+      },
+      {
+        "x": 24,
+        "metric": "Min",
+        "latency": 0.053294999997888226
+      },
+      {
+        "x": 24,
+        "metric": "Avg",
+        "latency": 1.0252278511499926
+      },
+      {
+        "x": 24,
+        "metric": "P50",
+        "latency": 0.9437890000008338
+      },
+      {
+        "x": 24,
+        "metric": "P99",
+        "latency": 2.84113200000138
+      },
+      {
+        "x": 24,
+        "metric": "Max",
+        "latency": 36.81533300000001
+      },
+      {
+        "x": 30,
+        "metric": "Min",
+        "latency": 0.05305000000225846
+      },
+      {
+        "x": 30,
+        "metric": "Avg",
+        "latency": 1.2889913725933644
+      },
+      {
+        "x": 30,
+        "metric": "P50",
+        "latency": 1.1601680000021588
+      },
+      {
+        "x": 30,
+        "metric": "P99",
+        "latency": 3.999370999998064
+      },
+      {
+        "x": 30,
+        "metric": "Max",
+        "latency": 94.13252499999999
+      },
+      {
+        "x": 32,
+        "metric": "Min",
+        "latency": 0.06039500000042608
+      },
+      {
+        "x": 32,
+        "metric": "Avg",
+        "latency": 1.2302777897149282
+      },
+      {
+        "x": 32,
+        "metric": "P50",
+        "latency": 1.104626999993343
+      },
+      {
+        "x": 32,
+        "metric": "P99",
+        "latency": 3.958161000002292
+      },
+      {
+        "x": 32,
+        "metric": "Max",
+        "latency": 64.95842000000039
+      },
+      {
+        "x": 64,
+        "metric": "Min",
+        "latency": 0.05413600000247243
+      },
+      {
+        "x": 64,
+        "metric": "Avg",
+        "latency": 1.477772625130105
+      },
+      {
+        "x": 64,
+        "metric": "P50",
+        "latency": 1.2668010000052163
+      },
+      {
+        "x": 64,
+        "metric": "P99",
+        "latency": 5.767187000004924
+      },
+      {
+        "x": 64,
+        "metric": "Max",
+        "latency": 170.67241099999956
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Total Workers"
+    },
+    "y": {
+      "field": "latency",
+      "type": "quantitative",
+      "title": "Read Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "metric",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Min",
+          "Avg",
+          "P50",
+          "P99",
+          "Max"
+        ],
+        "range": [
+          "#4c78a8",
+          "#72b7b2",
+          "#54a24b",
+          "#e45756",
+          "#b279a2"
+        ]
+      }
+    }
+  }
+};
+  vegaEmbed('#chart-latency-wihf89mgk', spec);
+</script>
+      </div>
+      <div class="chart-container">
+        <h3>Detailed Write Latency (ms)</h3>
+        <div id="chart-latency-cw215f6wu"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 2,
+        "metric": "Min",
+        "latency": 0.0625
+      },
+      {
+        "x": 2,
+        "metric": "Avg",
+        "latency": 0.31529142790209236
+      },
+      {
+        "x": 2,
+        "metric": "P50",
+        "latency": 0.2930300000589341
+      },
+      {
+        "x": 2,
+        "metric": "P99",
+        "latency": 1.382480000029318
+      },
+      {
+        "x": 2,
+        "metric": "Max",
+        "latency": 38.15984200002276
+      },
+      {
+        "x": 4,
+        "metric": "Min",
+        "latency": 0.06366299999899638
+      },
+      {
+        "x": 4,
+        "metric": "Avg",
+        "latency": 0.26652451448822156
+      },
+      {
+        "x": 4,
+        "metric": "P50",
+        "latency": 0.1353629999794066
+      },
+      {
+        "x": 4,
+        "metric": "P99",
+        "latency": 1.4680560000124387
+      },
+      {
+        "x": 4,
+        "metric": "Max",
+        "latency": 71.60960199999863
+      },
+      {
+        "x": 6,
+        "metric": "Min",
+        "latency": 0.06539000000339001
+      },
+      {
+        "x": 6,
+        "metric": "Avg",
+        "latency": 0.5976800003280991
+      },
+      {
+        "x": 6,
+        "metric": "P50",
+        "latency": 0.1747040000045672
+      },
+      {
+        "x": 6,
+        "metric": "P99",
+        "latency": 5.115320000011707
+      },
+      {
+        "x": 6,
+        "metric": "Max",
+        "latency": 57.633402000006754
+      },
+      {
+        "x": 8,
+        "metric": "Min",
+        "latency": 0.06031499999517109
+      },
+      {
+        "x": 8,
+        "metric": "Avg",
+        "latency": 0.36792517662047713
+      },
+      {
+        "x": 8,
+        "metric": "P50",
+        "latency": 0.16527399999904446
+      },
+      {
+        "x": 8,
+        "metric": "P99",
+        "latency": 3.429433000004792
+      },
+      {
+        "x": 8,
+        "metric": "Max",
+        "latency": 79.33691800000088
+      },
+      {
+        "x": 10,
+        "metric": "Min",
+        "latency": 0.05064200000197161
+      },
+      {
+        "x": 10,
+        "metric": "Avg",
+        "latency": 0.5785547027893043
+      },
+      {
+        "x": 10,
+        "metric": "P50",
+        "latency": 0.23760700001730584
+      },
+      {
+        "x": 10,
+        "metric": "P99",
+        "latency": 4.021329000010155
+      },
+      {
+        "x": 10,
+        "metric": "Max",
+        "latency": 61.16861600000266
+      },
+      {
+        "x": 12,
+        "metric": "Min",
+        "latency": 0.05314400000133901
+      },
+      {
+        "x": 12,
+        "metric": "Avg",
+        "latency": 0.829106601245132
+      },
+      {
+        "x": 12,
+        "metric": "P50",
+        "latency": 0.30762500000128057
+      },
+      {
+        "x": 12,
+        "metric": "P99",
+        "latency": 8.711505000013858
+      },
+      {
+        "x": 12,
+        "metric": "Max",
+        "latency": 155.36747499997728
+      },
+      {
+        "x": 14,
+        "metric": "Min",
+        "latency": 0.06144199999835109
+      },
+      {
+        "x": 14,
+        "metric": "Avg",
+        "latency": 0.9299643031898258
+      },
+      {
+        "x": 14,
+        "metric": "P50",
+        "latency": 0.3527689999973518
+      },
+      {
+        "x": 14,
+        "metric": "P99",
+        "latency": 8.900903000001563
+      },
+      {
+        "x": 14,
+        "metric": "Max",
+        "latency": 117.61509500000102
+      },
+      {
+        "x": 16,
+        "metric": "Min",
+        "latency": 0.06225600000470877
+      },
+      {
+        "x": 16,
+        "metric": "Avg",
+        "latency": 1.607889376823402
+      },
+      {
+        "x": 16,
+        "metric": "P50",
+        "latency": 0.5874210000038147
+      },
+      {
+        "x": 16,
+        "metric": "P99",
+        "latency": 14.543749000004027
+      },
+      {
+        "x": 16,
+        "metric": "Max",
+        "latency": 244.7779789999986
+      },
+      {
+        "x": 20,
+        "metric": "Min",
+        "latency": 0.06063200000062352
+      },
+      {
+        "x": 20,
+        "metric": "Avg",
+        "latency": 2.30189911393471
+      },
+      {
+        "x": 20,
+        "metric": "P50",
+        "latency": 1.0106460000024526
+      },
+      {
+        "x": 20,
+        "metric": "P99",
+        "latency": 21.820833000005223
+      },
+      {
+        "x": 20,
+        "metric": "Max",
+        "latency": 354.9602600000071
+      },
+      {
+        "x": 24,
+        "metric": "Min",
+        "latency": 0.06284100000630133
+      },
+      {
+        "x": 24,
+        "metric": "Avg",
+        "latency": 3.2472798010925286
+      },
+      {
+        "x": 24,
+        "metric": "P50",
+        "latency": 1.3162699999957113
+      },
+      {
+        "x": 24,
+        "metric": "P99",
+        "latency": 37.28009900000325
+      },
+      {
+        "x": 24,
+        "metric": "Max",
+        "latency": 348.5184889999946
+      },
+      {
+        "x": 30,
+        "metric": "Min",
+        "latency": 0.06221399999776622
+      },
+      {
+        "x": 30,
+        "metric": "Avg",
+        "latency": 6.679048627193367
+      },
+      {
+        "x": 30,
+        "metric": "P50",
+        "latency": 2.0618870000034804
+      },
+      {
+        "x": 30,
+        "metric": "P99",
+        "latency": 87.46703899998101
+      },
+      {
+        "x": 30,
+        "metric": "Max",
+        "latency": 1289.487570000012
+      },
+      {
+        "x": 32,
+        "metric": "Min",
+        "latency": 0.0652669999981299
+      },
+      {
+        "x": 32,
+        "metric": "Avg",
+        "latency": 7.802101319610649
+      },
+      {
+        "x": 32,
+        "metric": "P50",
+        "latency": 2.1993640000000596
+      },
+      {
+        "x": 32,
+        "metric": "P99",
+        "latency": 106.94816800000262
+      },
+      {
+        "x": 32,
+        "metric": "Max",
+        "latency": 1595.9651109999977
+      },
+      {
+        "x": 64,
+        "metric": "Min",
+        "latency": 0.06931099999928847
+      },
+      {
+        "x": 64,
+        "metric": "Avg",
+        "latency": 37.29290343277653
+      },
+      {
+        "x": 64,
+        "metric": "P50",
+        "latency": 4.767875000005006
+      },
+      {
+        "x": 64,
+        "metric": "P99",
+        "latency": 677.0870149999973
+      },
+      {
+        "x": 64,
+        "metric": "Max",
+        "latency": 2142.2118340000006
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Total Workers"
+    },
+    "y": {
+      "field": "latency",
+      "type": "quantitative",
+      "title": "Write Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "metric",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Min",
+          "Avg",
+          "P50",
+          "P99",
+          "Max"
+        ],
+        "range": [
+          "#4c78a8",
+          "#72b7b2",
+          "#54a24b",
+          "#e45756",
+          "#b279a2"
+        ]
+      }
+    }
+  }
+};
+  vegaEmbed('#chart-latency-cw215f6wu', spec);
+</script>
+      </div>
+      
+      <div class="chart-container">
+        <h3>Read Query Type Breakdown (P99)</h3>
+        <div id="chart-query-types-vbawvyivx"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "workers": 2,
+        "query": "Single Post with Details",
+        "latency": 0.18960300006438047
+      },
+      {
+        "workers": 2,
+        "query": "Posts for User",
+        "latency": 0.19127599999774247
+      },
+      {
+        "workers": 2,
+        "query": "Posts in Timeframe",
+        "latency": 0.7186519999522716
+      },
+      {
+        "workers": 2,
+        "query": "Users in Timeframe",
+        "latency": 0.4578650000039488
+      },
+      {
+        "workers": 4,
+        "query": "Single Post with Details",
+        "latency": 0.43245299998670816
+      },
+      {
+        "workers": 4,
+        "query": "Posts for User",
+        "latency": 0.43591999998898245
+      },
+      {
+        "workers": 4,
+        "query": "Posts in Timeframe",
+        "latency": 1.0696630000020377
+      },
+      {
+        "workers": 4,
+        "query": "Users in Timeframe",
+        "latency": 0.7570829999749549
+      },
+      {
+        "workers": 6,
+        "query": "Single Post with Details",
+        "latency": 4.261736999993445
+      },
+      {
+        "workers": 6,
+        "query": "Posts for User",
+        "latency": 4.290320000029169
+      },
+      {
+        "workers": 6,
+        "query": "Posts in Timeframe",
+        "latency": 7.96142300000065
+      },
+      {
+        "workers": 6,
+        "query": "Users in Timeframe",
+        "latency": 5.733806000003824
+      },
+      {
+        "workers": 8,
+        "query": "Single Post with Details",
+        "latency": 0.2973820000042906
+      },
+      {
+        "workers": 8,
+        "query": "Posts for User",
+        "latency": 0.29227999999966414
+      },
+      {
+        "workers": 8,
+        "query": "Posts in Timeframe",
+        "latency": 1.1757329999963986
+      },
+      {
+        "workers": 8,
+        "query": "Users in Timeframe",
+        "latency": 0.738004999991972
+      },
+      {
+        "workers": 10,
+        "query": "Single Post with Details",
+        "latency": 2.0362800000002608
+      },
+      {
+        "workers": 10,
+        "query": "Posts for User",
+        "latency": 2.0668060000025434
+      },
+      {
+        "workers": 10,
+        "query": "Posts in Timeframe",
+        "latency": 3.245258000009926
+      },
+      {
+        "workers": 10,
+        "query": "Users in Timeframe",
+        "latency": 2.800772999995388
+      },
+      {
+        "workers": 12,
+        "query": "Single Post with Details",
+        "latency": 3.0219339999966905
+      },
+      {
+        "workers": 12,
+        "query": "Posts for User",
+        "latency": 2.959893999999622
+      },
+      {
+        "workers": 12,
+        "query": "Posts in Timeframe",
+        "latency": 5.723789000003308
+      },
+      {
+        "workers": 12,
+        "query": "Users in Timeframe",
+        "latency": 4.979377999996359
+      },
+      {
+        "workers": 14,
+        "query": "Single Post with Details",
+        "latency": 0.6747360000008484
+      },
+      {
+        "workers": 14,
+        "query": "Posts for User",
+        "latency": 0.6665689999936149
+      },
+      {
+        "workers": 14,
+        "query": "Posts in Timeframe",
+        "latency": 2.094555000003311
+      },
+      {
+        "workers": 14,
+        "query": "Users in Timeframe",
+        "latency": 1.4537689999997383
+      },
+      {
+        "workers": 16,
+        "query": "Single Post with Details",
+        "latency": 4.723649999999907
+      },
+      {
+        "workers": 16,
+        "query": "Posts for User",
+        "latency": 4.74843000000692
+      },
+      {
+        "workers": 16,
+        "query": "Posts in Timeframe",
+        "latency": 8.169299000001047
+      },
+      {
+        "workers": 16,
+        "query": "Users in Timeframe",
+        "latency": 6.546323000016855
+      },
+      {
+        "workers": 20,
+        "query": "Single Post with Details",
+        "latency": 3.3152130000235047
+      },
+      {
+        "workers": 20,
+        "query": "Posts for User",
+        "latency": 3.319424999994226
+      },
+      {
+        "workers": 20,
+        "query": "Posts in Timeframe",
+        "latency": 6.138029000008828
+      },
+      {
+        "workers": 20,
+        "query": "Users in Timeframe",
+        "latency": 4.8835439999820665
+      },
+      {
+        "workers": 24,
+        "query": "Single Post with Details",
+        "latency": 1.713198000000375
+      },
+      {
+        "workers": 24,
+        "query": "Posts for User",
+        "latency": 1.684837000007974
+      },
+      {
+        "workers": 24,
+        "query": "Posts in Timeframe",
+        "latency": 3.387876000000688
+      },
+      {
+        "workers": 24,
+        "query": "Users in Timeframe",
+        "latency": 2.6300909999990836
+      },
+      {
+        "workers": 30,
+        "query": "Single Post with Details",
+        "latency": 2.924131000007037
+      },
+      {
+        "workers": 30,
+        "query": "Posts for User",
+        "latency": 2.9022489999988466
+      },
+      {
+        "workers": 30,
+        "query": "Posts in Timeframe",
+        "latency": 4.743327999996836
+      },
+      {
+        "workers": 30,
+        "query": "Users in Timeframe",
+        "latency": 3.9361939999998867
+      },
+      {
+        "workers": 32,
+        "query": "Single Post with Details",
+        "latency": 3.0103430000017397
+      },
+      {
+        "workers": 32,
+        "query": "Posts for User",
+        "latency": 2.9728980000072625
+      },
+      {
+        "workers": 32,
+        "query": "Posts in Timeframe",
+        "latency": 4.730379000000539
+      },
+      {
+        "workers": 32,
+        "query": "Users in Timeframe",
+        "latency": 3.914474999997765
+      },
+      {
+        "workers": 64,
+        "query": "Single Post with Details",
+        "latency": 4.7455709999921964
+      },
+      {
+        "workers": 64,
+        "query": "Posts for User",
+        "latency": 4.821546000006492
+      },
+      {
+        "workers": 64,
+        "query": "Posts in Timeframe",
+        "latency": 6.7492569999994885
+      },
+      {
+        "workers": 64,
+        "query": "Users in Timeframe",
+        "latency": 5.86925599999995
+      }
+    ]
+  },
+  "mark": {
+    "type": "bar",
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "workers",
+      "type": "ordinal",
+      "title": "Total Workers"
+    },
+    "y": {
+      "field": "latency",
+      "type": "quantitative",
+      "title": "P99 Latency (ms)"
+    },
+    "xOffset": {
+      "field": "query"
+    },
+    "color": {
+      "field": "query",
+      "title": "Query Type"
+    }
+  }
+};
+  vegaEmbed('#chart-query-types-vbawvyivx', spec);
+</script>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Part 2: Cache Impact (Fixed Workers: 10)</h2>
+      <div class="description">
+        Impact of RAM (Cache Size) on performance, ranging from 8MB to 4GB, with a fixed concurrent load of 10 workers (8r/2w).
+      </div>
+      <div class="chart-container">
+        <h3>Throughput by Cache Size</h3>
+        <div id="chart-cache-throughput-oeqmidd3w"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "cacheSizeMB": 8,
+        "opsPerSec": 4995.2930281816725
+      },
+      {
+        "cacheSizeMB": 16,
+        "opsPerSec": 8021.010125435269
+      },
+      {
+        "cacheSizeMB": 32,
+        "opsPerSec": 5771.453368866699
+      },
+      {
+        "cacheSizeMB": 48,
+        "opsPerSec": 3775.309878856733
+      },
+      {
+        "cacheSizeMB": 56,
+        "opsPerSec": 7875.525737000409
+      },
+      {
+        "cacheSizeMB": 64,
+        "opsPerSec": 7960.46150186955
+      },
+      {
+        "cacheSizeMB": 128,
+        "opsPerSec": 6358.327161813556
+      },
+      {
+        "cacheSizeMB": 256,
+        "opsPerSec": 8702.784608101741
+      },
+      {
+        "cacheSizeMB": 512,
+        "opsPerSec": 3933.29352913623
+      },
+      {
+        "cacheSizeMB": 1024,
+        "opsPerSec": 8243.052711739912
+      },
+      {
+        "cacheSizeMB": 2048,
+        "opsPerSec": 4653.872877017224
+      },
+      {
+        "cacheSizeMB": 4096,
+        "opsPerSec": 6521.565151493175
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "cacheSizeMB",
+      "type": "quantitative",
+      "title": "Cache Size (MB)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "y": {
+      "field": "opsPerSec",
+      "type": "quantitative",
+      "title": "Ops / Sec"
+    }
+  }
+};
+  vegaEmbed('#chart-cache-throughput-oeqmidd3w', spec);
+</script>
+      </div>
+
+      <div class="chart-container">
+        <h3>P99 Latency by Cache Size</h3>
+        <div id="chart-p99-tu3c5uesy"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 8,
+        "readP99": 5.668794999997772,
+        "writeP99": 8.62358200000017
+      },
+      {
+        "x": 16,
+        "readP99": 3.7505979999987176,
+        "writeP99": 4.928673999995226
+      },
+      {
+        "x": 32,
+        "readP99": 5.031717000005301,
+        "writeP99": 7.371574999997392
+      },
+      {
+        "x": 48,
+        "readP99": 7.4822019999992335,
+        "writeP99": 9.714397000003373
+      },
+      {
+        "x": 56,
+        "readP99": 3.7358060000042315,
+        "writeP99": 5.137102000000596
+      },
+      {
+        "x": 64,
+        "readP99": 2.7917270000034478,
+        "writeP99": 4.021329000010155
+      },
+      {
+        "x": 128,
+        "readP99": 4.5258019999891985,
+        "writeP99": 6.413501000002725
+      },
+      {
+        "x": 256,
+        "readP99": 2.102448000005097,
+        "writeP99": 3.756101999999373
+      },
+      {
+        "x": 512,
+        "readP99": 7.193738000001758,
+        "writeP99": 9.093458999999712
+      },
+      {
+        "x": 1024,
+        "readP99": 2.0100340000062715,
+        "writeP99": 3.9592499999998836
+      },
+      {
+        "x": 2048,
+        "readP99": 6.674324999999953,
+        "writeP99": 8.646653999996488
+      },
+      {
+        "x": 4096,
+        "readP99": 5.602530000003753,
+        "writeP99": 6.851680000021588
+      }
+    ]
+  },
+  "transform": [
+    {
+      "fold": [
+        "readP99",
+        "writeP99"
+      ],
+      "as": [
+        "Type",
+        "Latency"
+      ]
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Cache Size (MB)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "y": {
+      "field": "Latency",
+      "type": "quantitative",
+      "title": "P99 Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "Type",
+      "type": "nominal"
+    }
+  }
+};
+  vegaEmbed('#chart-p99-tu3c5uesy', spec);
+</script>
+      </div>
+
+      <div class="chart-container">
+        <h3>Detailed Read Latency by Cache Size</h3>
+        <div id="chart-latency-zci7cyhnd"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 8,
+        "metric": "Min",
+        "latency": 0.04348099999970145
+      },
+      {
+        "x": 8,
+        "metric": "Avg",
+        "latency": 0.9851649571335556
+      },
+      {
+        "x": 8,
+        "metric": "P50",
+        "latency": 0.5606960000004619
+      },
+      {
+        "x": 8,
+        "metric": "P99",
+        "latency": 5.668794999997772
+      },
+      {
+        "x": 8,
+        "metric": "Max",
+        "latency": 21.912337000000207
+      },
+      {
+        "x": 16,
+        "metric": "Min",
+        "latency": 0.04512000000977423
+      },
+      {
+        "x": 16,
+        "metric": "Avg",
+        "latency": 0.5605076507027075
+      },
+      {
+        "x": 16,
+        "metric": "P50",
+        "latency": 0.4082010000056471
+      },
+      {
+        "x": 16,
+        "metric": "P99",
+        "latency": 3.7505979999987176
+      },
+      {
+        "x": 16,
+        "metric": "Max",
+        "latency": 27.456242999993265
+      },
+      {
+        "x": 32,
+        "metric": "Min",
+        "latency": 0.04332200000044395
+      },
+      {
+        "x": 32,
+        "metric": "Avg",
+        "latency": 0.8305814187948422
+      },
+      {
+        "x": 32,
+        "metric": "P50",
+        "latency": 0.5148350000017672
+      },
+      {
+        "x": 32,
+        "metric": "P99",
+        "latency": 5.031717000005301
+      },
+      {
+        "x": 32,
+        "metric": "Max",
+        "latency": 22.95571999999811
+      },
+      {
+        "x": 48,
+        "metric": "Min",
+        "latency": 0.044799999999668216
+      },
+      {
+        "x": 48,
+        "metric": "Avg",
+        "latency": 1.3557221658937106
+      },
+      {
+        "x": 48,
+        "metric": "P50",
+        "latency": 0.6508750000066357
+      },
+      {
+        "x": 48,
+        "metric": "P99",
+        "latency": 7.4822019999992335
+      },
+      {
+        "x": 48,
+        "metric": "Max",
+        "latency": 22.994383999997808
+      },
+      {
+        "x": 56,
+        "metric": "Min",
+        "latency": 0.043510999999853084
+      },
+      {
+        "x": 56,
+        "metric": "Avg",
+        "latency": 0.5650783308937503
+      },
+      {
+        "x": 56,
+        "metric": "P50",
+        "latency": 0.4199920000100974
+      },
+      {
+        "x": 56,
+        "metric": "P99",
+        "latency": 3.7358060000042315
+      },
+      {
+        "x": 56,
+        "metric": "Max",
+        "latency": 24.97164900000007
+      },
+      {
+        "x": 64,
+        "metric": "Min",
+        "latency": 0.04489800000010291
+      },
+      {
+        "x": 64,
+        "metric": "Avg",
+        "latency": 0.579021995454987
+      },
+      {
+        "x": 64,
+        "metric": "P50",
+        "latency": 0.4533519999968121
+      },
+      {
+        "x": 64,
+        "metric": "P99",
+        "latency": 2.7917270000034478
+      },
+      {
+        "x": 64,
+        "metric": "Max",
+        "latency": 26.069272000000637
+      },
+      {
+        "x": 128,
+        "metric": "Min",
+        "latency": 0.04401299999881303
+      },
+      {
+        "x": 128,
+        "metric": "Avg",
+        "latency": 0.7361616142904639
+      },
+      {
+        "x": 128,
+        "metric": "P50",
+        "latency": 0.4871890000067651
+      },
+      {
+        "x": 128,
+        "metric": "P99",
+        "latency": 4.5258019999891985
+      },
+      {
+        "x": 128,
+        "metric": "Max",
+        "latency": 27.727476000000024
+      },
+      {
+        "x": 256,
+        "metric": "Min",
+        "latency": 0.04398399999990943
+      },
+      {
+        "x": 256,
+        "metric": "Avg",
+        "latency": 0.5125062507793925
+      },
+      {
+        "x": 256,
+        "metric": "P50",
+        "latency": 0.41253499999584164
+      },
+      {
+        "x": 256,
+        "metric": "P99",
+        "latency": 2.102448000005097
+      },
+      {
+        "x": 256,
+        "metric": "Max",
+        "latency": 31.960713000007672
+      },
+      {
+        "x": 512,
+        "metric": "Min",
+        "latency": 0.042479000000639644
+      },
+      {
+        "x": 512,
+        "metric": "Avg",
+        "latency": 1.288994524625048
+      },
+      {
+        "x": 512,
+        "metric": "P50",
+        "latency": 0.6789549999957671
+      },
+      {
+        "x": 512,
+        "metric": "P99",
+        "latency": 7.193738000001758
+      },
+      {
+        "x": 512,
+        "metric": "Max",
+        "latency": 49.690666000009514
+      },
+      {
+        "x": 1024,
+        "metric": "Min",
+        "latency": 0.046706999997695675
+      },
+      {
+        "x": 1024,
+        "metric": "Avg",
+        "latency": 0.543954205973866
+      },
+      {
+        "x": 1024,
+        "metric": "P50",
+        "latency": 0.441569000002346
+      },
+      {
+        "x": 1024,
+        "metric": "P99",
+        "latency": 2.0100340000062715
+      },
+      {
+        "x": 1024,
+        "metric": "Max",
+        "latency": 27.791070999999647
+      },
+      {
+        "x": 2048,
+        "metric": "Min",
+        "latency": 0.048351999999795225
+      },
+      {
+        "x": 2048,
+        "metric": "Avg",
+        "latency": 1.0693631644204324
+      },
+      {
+        "x": 2048,
+        "metric": "P50",
+        "latency": 0.6164690000005066
+      },
+      {
+        "x": 2048,
+        "metric": "P99",
+        "latency": 6.674324999999953
+      },
+      {
+        "x": 2048,
+        "metric": "Max",
+        "latency": 24.388315000000148
+      },
+      {
+        "x": 4096,
+        "metric": "Min",
+        "latency": 0.044781000000511995
+      },
+      {
+        "x": 4096,
+        "metric": "Avg",
+        "latency": 0.7143032579052486
+      },
+      {
+        "x": 4096,
+        "metric": "P50",
+        "latency": 0.46163599999272265
+      },
+      {
+        "x": 4096,
+        "metric": "P99",
+        "latency": 5.602530000003753
+      },
+      {
+        "x": 4096,
+        "metric": "Max",
+        "latency": 37.398649000009755
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Cache Size (MB)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "y": {
+      "field": "latency",
+      "type": "quantitative",
+      "title": "Read Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "metric",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Min",
+          "Avg",
+          "P50",
+          "P99",
+          "Max"
+        ],
+        "range": [
+          "#4c78a8",
+          "#72b7b2",
+          "#54a24b",
+          "#e45756",
+          "#b279a2"
+        ]
+      }
+    }
+  }
+};
+  vegaEmbed('#chart-latency-zci7cyhnd', spec);
+</script>
+      </div>
+      <div class="chart-container">
+        <h3>Detailed Write Latency by Cache Size</h3>
+        <div id="chart-latency-5ijbta9qt"></div>
+<script type="text/javascript">
+  var spec = {
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 300,
+  "data": {
+    "values": [
+      {
+        "x": 8,
+        "metric": "Min",
+        "latency": 0.057253000000855536
+      },
+      {
+        "x": 8,
+        "metric": "Avg",
+        "latency": 0.8525176423644678
+      },
+      {
+        "x": 8,
+        "metric": "P50",
+        "latency": 0.26944600000024366
+      },
+      {
+        "x": 8,
+        "metric": "P99",
+        "latency": 8.62358200000017
+      },
+      {
+        "x": 8,
+        "metric": "Max",
+        "latency": 81.90303200000017
+      },
+      {
+        "x": 16,
+        "metric": "Min",
+        "latency": 0.06104500000947155
+      },
+      {
+        "x": 16,
+        "metric": "Avg",
+        "latency": 0.5901707675628529
+      },
+      {
+        "x": 16,
+        "metric": "P50",
+        "latency": 0.23000999999931082
+      },
+      {
+        "x": 16,
+        "metric": "P99",
+        "latency": 4.928673999995226
+      },
+      {
+        "x": 16,
+        "metric": "Max",
+        "latency": 87.80617799999891
+      },
+      {
+        "x": 32,
+        "metric": "Min",
+        "latency": 0.056946999990032054
+      },
+      {
+        "x": 32,
+        "metric": "Avg",
+        "latency": 0.7670726800765786
+      },
+      {
+        "x": 32,
+        "metric": "P50",
+        "latency": 0.25034600001526996
+      },
+      {
+        "x": 32,
+        "metric": "P99",
+        "latency": 7.371574999997392
+      },
+      {
+        "x": 32,
+        "metric": "Max",
+        "latency": 110.70246300000144
+      },
+      {
+        "x": 48,
+        "metric": "Min",
+        "latency": 0.05740299999888521
+      },
+      {
+        "x": 48,
+        "metric": "Avg",
+        "latency": 1.0343731275177512
+      },
+      {
+        "x": 48,
+        "metric": "P50",
+        "latency": 0.27804100001230836
+      },
+      {
+        "x": 48,
+        "metric": "P99",
+        "latency": 9.714397000003373
+      },
+      {
+        "x": 48,
+        "metric": "Max",
+        "latency": 117.43153399999574
+      },
+      {
+        "x": 56,
+        "metric": "Min",
+        "latency": 0.0575490000010177
+      },
+      {
+        "x": 56,
+        "metric": "Avg",
+        "latency": 0.5991322176361281
+      },
+      {
+        "x": 56,
+        "metric": "P50",
+        "latency": 0.23904200000106357
+      },
+      {
+        "x": 56,
+        "metric": "P99",
+        "latency": 5.137102000000596
+      },
+      {
+        "x": 56,
+        "metric": "Max",
+        "latency": 80.60948199999984
+      },
+      {
+        "x": 64,
+        "metric": "Min",
+        "latency": 0.05064200000197161
+      },
+      {
+        "x": 64,
+        "metric": "Avg",
+        "latency": 0.5785547027893043
+      },
+      {
+        "x": 64,
+        "metric": "P50",
+        "latency": 0.23760700001730584
+      },
+      {
+        "x": 64,
+        "metric": "P99",
+        "latency": 4.021329000010155
+      },
+      {
+        "x": 64,
+        "metric": "Max",
+        "latency": 61.16861600000266
+      },
+      {
+        "x": 128,
+        "metric": "Min",
+        "latency": 0.062015000003157184
+      },
+      {
+        "x": 128,
+        "metric": "Avg",
+        "latency": 0.7135019498977527
+      },
+      {
+        "x": 128,
+        "metric": "P50",
+        "latency": 0.24554999999236315
+      },
+      {
+        "x": 128,
+        "metric": "P99",
+        "latency": 6.413501000002725
+      },
+      {
+        "x": 128,
+        "metric": "Max",
+        "latency": 120.09751099999994
+      },
+      {
+        "x": 256,
+        "metric": "Min",
+        "latency": 0.057338999991770834
+      },
+      {
+        "x": 256,
+        "metric": "Avg",
+        "latency": 0.5382838340682847
+      },
+      {
+        "x": 256,
+        "metric": "P50",
+        "latency": 0.2271960000070976
+      },
+      {
+        "x": 256,
+        "metric": "P99",
+        "latency": 3.756101999999373
+      },
+      {
+        "x": 256,
+        "metric": "Max",
+        "latency": 54.58681499999966
+      },
+      {
+        "x": 512,
+        "metric": "Min",
+        "latency": 0.06251999999949476
+      },
+      {
+        "x": 512,
+        "metric": "Avg",
+        "latency": 0.9860959523391739
+      },
+      {
+        "x": 512,
+        "metric": "P50",
+        "latency": 0.2950000000419095
+      },
+      {
+        "x": 512,
+        "metric": "P99",
+        "latency": 9.093458999999712
+      },
+      {
+        "x": 512,
+        "metric": "Max",
+        "latency": 150.18248699998367
+      },
+      {
+        "x": 1024,
+        "metric": "Min",
+        "latency": 0.062375000001338776
+      },
+      {
+        "x": 1024,
+        "metric": "Avg",
+        "latency": 0.5550015667037657
+      },
+      {
+        "x": 1024,
+        "metric": "P50",
+        "latency": 0.24234499999147374
+      },
+      {
+        "x": 1024,
+        "metric": "P99",
+        "latency": 3.9592499999998836
+      },
+      {
+        "x": 1024,
+        "metric": "Max",
+        "latency": 64.8432790000079
+      },
+      {
+        "x": 2048,
+        "metric": "Min",
+        "latency": 0.060014000002411194
+      },
+      {
+        "x": 2048,
+        "metric": "Avg",
+        "latency": 0.8616239292297401
+      },
+      {
+        "x": 2048,
+        "metric": "P50",
+        "latency": 0.2723610000102781
+      },
+      {
+        "x": 2048,
+        "metric": "P99",
+        "latency": 8.646653999996488
+      },
+      {
+        "x": 2048,
+        "metric": "Max",
+        "latency": 169.47834399999556
+      },
+      {
+        "x": 4096,
+        "metric": "Min",
+        "latency": 0.05763399999705143
+      },
+      {
+        "x": 4096,
+        "metric": "Avg",
+        "latency": 0.6921620578460175
+      },
+      {
+        "x": 4096,
+        "metric": "P50",
+        "latency": 0.2528410000013537
+      },
+      {
+        "x": 4096,
+        "metric": "P99",
+        "latency": 6.851680000021588
+      },
+      {
+        "x": 4096,
+        "metric": "Max",
+        "latency": 102.55879900000036
+      }
+    ]
+  },
+  "mark": {
+    "type": "line",
+    "point": true,
+    "tooltip": true
+  },
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "title": "Cache Size (MB)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "y": {
+      "field": "latency",
+      "type": "quantitative",
+      "title": "Write Latency (ms)",
+      "scale": {
+        "type": "log"
+      }
+    },
+    "color": {
+      "field": "metric",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "Min",
+          "Avg",
+          "P50",
+          "P99",
+          "Max"
+        ],
+        "range": [
+          "#4c78a8",
+          "#72b7b2",
+          "#54a24b",
+          "#e45756",
+          "#b279a2"
+        ]
+      }
+    }
+  }
+};
+  vegaEmbed('#chart-latency-5ijbta9qt', spec);
+</script>
+      </div>
+    </div>
+
+    <div class="section">
+        <h2>Raw Data Reference</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Config ID</th>
+                    <th>Workers</th>
+                    <th>Cache (MB)</th>
+                    <th>Ops/Sec</th>
+                    <th>Read P99 (ms)</th>
+                    <th>Write P99 (ms)</th>
+                    <th>Duration (s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>r1_w1_R1.0m_W131.1k_c64mb</td>
+                    <td>2</td>
+                    <td>64</td>
+                    <td>1246</td>
+                    <td>0.57</td>
+                    <td>1.38</td>
+                    <td>947.1</td>
+                </tr>
+                <tr>
+                    <td>r3_w1_R1.0m_W131.1k_c64mb</td>
+                    <td>4</td>
+                    <td>64</td>
+                    <td>4115</td>
+                    <td>0.84</td>
+                    <td>1.47</td>
+                    <td>286.7</td>
+                </tr>
+                <tr>
+                    <td>r4_w2_R1.0m_W131.1k_c64mb</td>
+                    <td>6</td>
+                    <td>64</td>
+                    <td>3089</td>
+                    <td>5.58</td>
+                    <td>5.12</td>
+                    <td>381.9</td>
+                </tr>
+                <tr>
+                    <td>r6_w2_R1.0m_W131.1k_c64mb</td>
+                    <td>8</td>
+                    <td>64</td>
+                    <td>9361</td>
+                    <td>0.91</td>
+                    <td>3.43</td>
+                    <td>126.0</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c8mb</td>
+                    <td>10</td>
+                    <td>8</td>
+                    <td>4995</td>
+                    <td>5.67</td>
+                    <td>8.62</td>
+                    <td>236.2</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c16mb</td>
+                    <td>10</td>
+                    <td>16</td>
+                    <td>8021</td>
+                    <td>3.75</td>
+                    <td>4.93</td>
+                    <td>147.1</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c32mb</td>
+                    <td>10</td>
+                    <td>32</td>
+                    <td>5771</td>
+                    <td>5.03</td>
+                    <td>7.37</td>
+                    <td>204.4</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c48mb</td>
+                    <td>10</td>
+                    <td>48</td>
+                    <td>3775</td>
+                    <td>7.48</td>
+                    <td>9.71</td>
+                    <td>312.5</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c56mb</td>
+                    <td>10</td>
+                    <td>56</td>
+                    <td>7876</td>
+                    <td>3.74</td>
+                    <td>5.14</td>
+                    <td>149.8</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c64mb</td>
+                    <td>10</td>
+                    <td>64</td>
+                    <td>7960</td>
+                    <td>2.79</td>
+                    <td>4.02</td>
+                    <td>148.2</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c128mb</td>
+                    <td>10</td>
+                    <td>128</td>
+                    <td>6358</td>
+                    <td>4.53</td>
+                    <td>6.41</td>
+                    <td>185.5</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c256mb</td>
+                    <td>10</td>
+                    <td>256</td>
+                    <td>8703</td>
+                    <td>2.10</td>
+                    <td>3.76</td>
+                    <td>135.5</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c512mb</td>
+                    <td>10</td>
+                    <td>512</td>
+                    <td>3933</td>
+                    <td>7.19</td>
+                    <td>9.09</td>
+                    <td>299.9</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c1024mb</td>
+                    <td>10</td>
+                    <td>1024</td>
+                    <td>8243</td>
+                    <td>2.01</td>
+                    <td>3.96</td>
+                    <td>143.1</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c2048mb</td>
+                    <td>10</td>
+                    <td>2048</td>
+                    <td>4654</td>
+                    <td>6.67</td>
+                    <td>8.65</td>
+                    <td>253.5</td>
+                </tr>
+                <tr>
+                    <td>r8_w2_R1.0m_W131.1k_c4096mb</td>
+                    <td>10</td>
+                    <td>4096</td>
+                    <td>6522</td>
+                    <td>5.60</td>
+                    <td>6.85</td>
+                    <td>180.9</td>
+                </tr>
+                <tr>
+                    <td>r9_w3_R1.0m_W131.1k_c64mb</td>
+                    <td>12</td>
+                    <td>64</td>
+                    <td>7773</td>
+                    <td>4.72</td>
+                    <td>8.71</td>
+                    <td>151.8</td>
+                </tr>
+                <tr>
+                    <td>r11_w3_R1.0m_W131.1k_c64mb</td>
+                    <td>14</td>
+                    <td>64</td>
+                    <td>9393</td>
+                    <td>1.80</td>
+                    <td>8.90</td>
+                    <td>125.6</td>
+                </tr>
+                <tr>
+                    <td>r12_w4_R1.0m_W131.1k_c64mb</td>
+                    <td>16</td>
+                    <td>64</td>
+                    <td>5723</td>
+                    <td>6.62</td>
+                    <td>14.54</td>
+                    <td>206.1</td>
+                </tr>
+                <tr>
+                    <td>r15_w5_R1.0m_W131.1k_c64mb</td>
+                    <td>20</td>
+                    <td>64</td>
+                    <td>6506</td>
+                    <td>5.06</td>
+                    <td>21.82</td>
+                    <td>181.3</td>
+                </tr>
+                <tr>
+                    <td>r18_w6_R1.0m_W131.1k_c64mb</td>
+                    <td>24</td>
+                    <td>64</td>
+                    <td>8859</td>
+                    <td>2.84</td>
+                    <td>37.28</td>
+                    <td>133.2</td>
+                </tr>
+                <tr>
+                    <td>r24_w6_R1.0m_W131.1k_c64mb</td>
+                    <td>30</td>
+                    <td>64</td>
+                    <td>7731</td>
+                    <td>4.00</td>
+                    <td>87.47</td>
+                    <td>152.6</td>
+                </tr>
+                <tr>
+                    <td>r24_w8_R1.0m_W131.1k_c64mb</td>
+                    <td>32</td>
+                    <td>64</td>
+                    <td>8189</td>
+                    <td>3.96</td>
+                    <td>106.95</td>
+                    <td>144.1</td>
+                </tr>
+                <tr>
+                    <td>r48_w16_R1.0m_W131.1k_c64mb</td>
+                    <td>64</td>
+                    <td>64</td>
+                    <td>7653</td>
+                    <td>5.77</td>
+                    <td>677.09</td>
+                    <td>154.1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+  </div>
+</body>
+</html>

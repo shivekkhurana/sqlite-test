@@ -8,6 +8,9 @@ export interface Metrics {
     lockErrors: number;
     successRate: number;
     avgTime: number;
+    minTime: number;
+    maxTime: number;
+    p50: number;
     p95: number;
     p99: number;
     writesPerSec: number;

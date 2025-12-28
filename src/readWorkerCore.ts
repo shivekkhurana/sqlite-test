@@ -108,6 +108,7 @@ export function executeRead(db: Database.Database, task: ReadTask): ReadResult {
                     FROM users
                     WHERE created_at BETWEEN ? AND ?
                     ORDER BY created_at DESC
+                    LIMIT 100
                 `);
                 rows = stmt.all(task.params.startDate!, task.params.endDate!);
                 break;
