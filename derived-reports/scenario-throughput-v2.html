@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scenario Compound Report V2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 40px auto; max-width: 1200px; line-height: 1.6; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        .chart-container { width: 100%; margin: 20px 0; min-height: 400px; }
+        .error-box { background: #fee; color: #c00; padding: 10px; border: 1px solid #fcc; border-radius: 4px; }
+        .summary-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9em; }
+        .summary-table th, .summary-table td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        .summary-table th { background-color: #f8f9fa; font-weight: 600; }
+        .summary-table tr:hover { background-color: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <h1>Scenario Compound Report V2</h1>
+    
+    <h2>Baseline Performance: Latency vs Errors</h2>
+    <p>This chart visualizes the P99 latency (Blue Line) and Error Counts (Red Bars) for the baseline "base0" scenario (SQLite Defaults). Both axes use a logarithmic scale.</p>
+    
+    <div id="perf-base0-zpersxsn3" class="chart-container"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"base0 Performance - Latency vs Errors","data":{"values":[{"concurrency":1,"latency":1.6874580000003334,"errorCount":0},{"concurrency":2,"latency":1.426779000001261,"errorCount":49998},{"concurrency":4,"latency":1.3930560000007972,"errorCount":75031},{"concurrency":8,"latency":1.7651130000012927,"errorCount":89232},{"concurrency":16,"latency":2.6641339999914635,"errorCount":98326},{"concurrency":32,"latency":2.7063560000096913,"errorCount":97988},{"concurrency":64,"latency":83.71229200001108,"errorCount":98839},{"concurrency":128,"latency":470.4476790000044,"errorCount":99069}]},"width":800,"height":400,"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers (Concurrency)"}},"layer":[{"encoding":{"y":{"field":"errorCount","type":"quantitative","title":"Error Counts","scale":{"type":"symlog","constant":1,"domainMin":0},"axis":null}},"layer":[{"mark":{"type":"bar","color":"#e74c3c","opacity":0.5,"tooltip":true},"encoding":{"tooltip":[{"field":"concurrency","title":"Workers"},{"field":"errorCount","title":"Errors"}]}},{"mark":{"type":"text","align":"center","baseline":"bottom","dy":-5,"fontSize":11,"font":"sans-serif"},"encoding":{"text":{"field":"errorCount","type":"quantitative"},"color":{"value":"#e74c3c"}},"transform":[{"filter":"datum.errorCount > 0"}]}]},{"mark":{"type":"line","point":true,"color":"#2980b9","tooltip":true},"encoding":{"y":{"field":"latency","type":"quantitative","title":"P99 Latency (ms)","scale":{"type":"log","domainMin":1},"axis":{"titleColor":"#2980b9","grid":true,"orient":"left"}},"tooltip":[{"field":"concurrency","title":"Workers"},{"field":"latency","title":"P99 Latency (ms)"}]}}],"resolve":{"scale":{"y":"independent"}}};
+            vegaEmbed('#perf-base0-zpersxsn3', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>Busy Timeout Comparison (400ms vs 2s vs 5s)</h2>
+    <p>Comparing three Busy Timeout configurations. 
+    <strong>Lines</strong> represent P99 Latency. 
+    <strong>Grouped Bars</strong> represent Error Counts (Red fill with colored borders).</p>
+    
+    <div id="busy-timeout-comparison-2d48kv31v" class="chart-container"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"Busy Timeout Comparison - Latency vs Errors","data":{"values":[{"concurrency":1,"scenario":"400ms","color":"#8e44ad","latency":1.9504549999983283,"errorCount":0},{"concurrency":2,"scenario":"400ms","color":"#8e44ad","latency":4.995152000017697,"errorCount":0},{"concurrency":4,"scenario":"400ms","color":"#8e44ad","latency":22.160992999968585,"errorCount":0},{"concurrency":8,"scenario":"400ms","color":"#8e44ad","latency":92.72784500010312,"errorCount":0},{"concurrency":16,"scenario":"400ms","color":"#8e44ad","latency":255.13572099991143,"errorCount":74},{"concurrency":32,"scenario":"400ms","color":"#8e44ad","latency":426.84326699981466,"errorCount":2744},{"concurrency":64,"scenario":"400ms","color":"#8e44ad","latency":442.24123500008136,"errorCount":19142},{"concurrency":128,"scenario":"400ms","color":"#8e44ad","latency":544.6905419994146,"errorCount":43582},{"concurrency":1,"scenario":"2000ms","color":"#f39c12","latency":1.948259999990114,"errorCount":0},{"concurrency":2,"scenario":"2000ms","color":"#f39c12","latency":4.9837010000192095,"errorCount":0},{"concurrency":4,"scenario":"2000ms","color":"#f39c12","latency":22.131762000033632,"errorCount":0},{"concurrency":8,"scenario":"2000ms","color":"#f39c12","latency":92.52703699993435,"errorCount":0},{"concurrency":16,"scenario":"2000ms","color":"#f39c12","latency":289.97224400006235,"errorCount":0},{"concurrency":32,"scenario":"2000ms","color":"#f39c12","latency":666.2254380001687,"errorCount":0},{"concurrency":64,"scenario":"2000ms","color":"#f39c12","latency":1714.531336999964,"errorCount":354},{"concurrency":128,"scenario":"2000ms","color":"#f39c12","latency":2002.8102350002155,"errorCount":1851},{"concurrency":1,"scenario":"5000ms","color":"#d35400","latency":1.3723310000059428,"errorCount":0},{"concurrency":2,"scenario":"5000ms","color":"#d35400","latency":4.623919999998179,"errorCount":0},{"concurrency":4,"scenario":"5000ms","color":"#d35400","latency":21.73486700002104,"errorCount":0},{"concurrency":8,"scenario":"5000ms","color":"#d35400","latency":91.16516699991189,"errorCount":0},{"concurrency":16,"scenario":"5000ms","color":"#d35400","latency":253.03985900012776,"errorCount":0},{"concurrency":32,"scenario":"5000ms","color":"#d35400","latency":659.513145999983,"errorCount":0},{"concurrency":64,"scenario":"5000ms","color":"#d35400","latency":1219.809957000427,"errorCount":0},{"concurrency":128,"scenario":"5000ms","color":"#d35400","latency":2607.2363699991256,"errorCount":5}]},"width":800,"height":400,"resolve":{"scale":{"y":"independent"}},"layer":[{"mark":{"type":"bar","fillOpacity":0.6,"strokeWidth":2,"cursor":"pointer","tooltip":true},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers"},"xOffset":{"field":"scenario","sort":["400ms","2000ms","5000ms"]},"y":{"field":"errorCount","type":"quantitative","title":"Error Counts","scale":{"type":"symlog","constant":1,"domainMin":0},"axis":{"titleColor":"#e74c3c","orient":"right","grid":false,"titleFontWeight":"bold"}},"fill":{"field":"color","scale":null},"stroke":{"value":"#e74c3c"},"tooltip":[{"field":"scenario","title":"Timeout"},{"field":"concurrency","title":"Workers"},{"field":"errorCount","title":"Errors"}]}},{"mark":{"type":"text","fontSize":10,"fontWeight":"bold","dy":-10,"align":"center"},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"xOffset":{"field":"scenario","sort":["400ms","2000ms","5000ms"]},"y":{"field":"errorCount","type":"quantitative","axis":null},"text":{"field":"errorCount","type":"quantitative"},"color":{"value":"black"}},"transform":[{"filter":"datum.errorCount > 0"}]},{"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"latency","type":"quantitative","title":"P99 Latency (ms)","scale":{"type":"log","domainMin":1},"axis":{"titleColor":"#333","grid":true,"orient":"left","titleFontWeight":"bold"}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["400ms","2000ms","5000ms"],"range":["#8e44ad","#f39c12","#d35400"]},"title":"Timeout Setting"},"tooltip":[{"field":"scenario","title":"Timeout"},{"field":"concurrency","title":"Workers"},{"field":"latency","title":"P99 Latency (ms)"}]}}]};
+            vegaEmbed('#busy-timeout-comparison-2d48kv31v', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>Impact of WAL Mode (5000ms Timeout vs WAL)</h2>
+    <p>This chart highlights the performance jump when switching from <strong>Journal Mode = DELETE (with 5000ms timeout)</strong> to <strong>Journal Mode = WAL</strong>. 
+    It compares both <strong>P99 Latency</strong> and <strong>Average Latency</strong>.</p>
+    
+    <div id="wal-jump-r2e8xqsqk" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"Impact of WAL Mode - Latency Comparison","data":{"values":[{"type":"data","concurrency":1,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":1.3723310000059428},{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":1.5661609999951907},{"type":"data","concurrency":1,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":0.7955622229099925},{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":0.8174576630300454},{"type":"data","concurrency":2,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":4.623919999998179},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":2.4762229999760166},{"type":"annotation","concurrency":2,"metric":"P99 Latency","midpoint":3.383763740872668,"label":"-46%"},{"type":"data","concurrency":2,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":1.5653911375999834},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":1.4002560940299993},{"type":"data","concurrency":4,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":21.73486700002104},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":10.745245000056457},{"type":"annotation","concurrency":4,"metric":"P99 Latency","midpoint":15.282227290511948,"label":"-51%"},{"type":"data","concurrency":4,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":5.013621336090113},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":3.277602246799936},{"type":"annotation","concurrency":4,"metric":"Avg Latency","midpoint":4.0537213219180535,"label":"-35%"},{"type":"data","concurrency":8,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":91.16516699991189},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":61.43524200003594},{"type":"annotation","concurrency":8,"metric":"P99 Latency","midpoint":74.838186085803,"label":"-33%"},{"type":"data","concurrency":8,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":23.783772884749958},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":12.102967314579923},{"type":"annotation","concurrency":8,"metric":"Avg Latency","midpoint":16.96626729252846,"label":"-49%"},{"type":"data","concurrency":16,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":253.03985900012776},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":114.65533400001004},{"type":"annotation","concurrency":16,"metric":"P99 Latency","midpoint":170.33017803365055,"label":"-55%"},{"type":"data","concurrency":16,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":69.69499433829037},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":22.326900866899685},{"type":"annotation","concurrency":16,"metric":"Avg Latency","midpoint":39.447094056598694,"label":"-68%"},{"type":"data","concurrency":32,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":659.513145999983},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":201.91397699993104},{"type":"annotation","concurrency":32,"metric":"P99 Latency","midpoint":364.917692353485,"label":"-69%"},{"type":"data","concurrency":32,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":127.66505692826975},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":36.79333517152001},{"type":"annotation","concurrency":32,"metric":"Avg Latency","midpoint":68.53629132987145,"label":"-71%"},{"type":"data","concurrency":64,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":1219.809957000427},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":981.8456860000733},{"type":"annotation","concurrency":64,"metric":"P99 Latency","midpoint":1094.3788850397307,"label":"-20%"},{"type":"data","concurrency":64,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":248.93632333813005},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":107.49351636380175},{"type":"annotation","concurrency":64,"metric":"Avg Latency","midpoint":163.5819083709807,"label":"-57%"},{"type":"data","concurrency":128,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"P99 Latency","value":2607.2363699991256},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":1795.2708560000174},{"type":"annotation","concurrency":128,"metric":"P99 Latency","midpoint":2163.4914998129084,"label":"-31%"},{"type":"data","concurrency":128,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Avg Latency","value":603.8417842523386},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":264.41297013594345},{"type":"annotation","concurrency":128,"metric":"Avg Latency","midpoint":399.57927832452526,"label":"-56%"}]},"facet":{"row":{"field":"metric","title":null,"header":{"labelFontSize":16,"labelFontWeight":"bold"}}},"spec":{"width":800,"height":300,"layer":[{"transform":[{"filter":"datum.type === 'data'"}],"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Latency (ms)","scale":{"type":"log","domainMin":0.1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["5s Timeout (Journal=DELETE)","WAL Mode"],"range":["#d35400","#27ae60"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Latency","format":".2f"}]}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333","fill":"#fff","stroke":"#fff","strokeWidth":2},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333"},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}}]},"resolve":{"scale":{"y":"independent"}}};
+            vegaEmbed('#wal-jump-r2e8xqsqk', spec).catch(console.error);
+        })();
+    </script>
+    
+    
+    <h2>Impact of WAL Mode (Throughput)</h2>
+    <p>This chart compares the <strong>Writes Per Second</strong> between DELETE Mode (5000ms Timeout) and WAL Mode.</p>
+    
+    <div id="wal-throughput-ipf7tt4e8" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"Impact of WAL Mode - Throughput Comparison","data":{"values":[{"type":"data","concurrency":1,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":982.7102231327108},{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":556.638536747916},{"type":"annotation","concurrency":1,"metric":"Writes / Sec","midpoint":739.6042054043569,"label":"-43%"},{"type":"data","concurrency":2,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":775.6912969502893},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":644.4552265899722},{"type":"annotation","concurrency":2,"metric":"Writes / Sec","midpoint":707.0348722234061,"label":"-17%"},{"type":"data","concurrency":4,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":335.1200251071127},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":496.3286700843251},{"type":"annotation","concurrency":4,"metric":"Writes / Sec","midpoint":407.8353544998752,"label":"+48%"},{"type":"data","concurrency":8,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":121.80719961108112},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":222.9519123520267},{"type":"annotation","concurrency":8,"metric":"Writes / Sec","midpoint":164.7942598864887,"label":"+83%"},{"type":"data","concurrency":16,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":84.45075839810706},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":214.07820131952937},{"type":"annotation","concurrency":16,"metric":"Writes / Sec","midpoint":134.45841906677654,"label":"+153%"},{"type":"data","concurrency":32,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":71.3938524521745},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":210.47194733536912},{"type":"annotation","concurrency":32,"metric":"Writes / Sec","midpoint":122.58223016972397,"label":"+195%"},{"type":"data","concurrency":64,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":66.38679917325841},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":100.9404094351442},{"type":"annotation","concurrency":64,"metric":"Writes / Sec","midpoint":81.86031205436122,"label":"+52%"},{"type":"data","concurrency":128,"scenario":"5s Timeout (Journal=DELETE)","color":"#d35400","metric":"Writes / Sec","value":61.27826156920206},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":92.73853384054163},{"type":"annotation","concurrency":128,"metric":"Writes / Sec","midpoint":75.38472082739982,"label":"+51%"}]},"width":800,"height":300,"layer":[{"transform":[{"filter":"datum.type === 'data'"}],"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Writes / Second","scale":{"type":"log","domainMin":1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["5s Timeout (Journal=DELETE)","WAL Mode"],"range":["#d35400","#27ae60"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Writes/Sec","format":",.0f"}]}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333","fill":"#fff","stroke":"#fff","strokeWidth":2},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333"},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}}]};
+            vegaEmbed('#wal-throughput-ipf7tt4e8', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>WAL to WAL+Sync Normal: Latency Improvement</h2>
+    <p>This chart shows the latency reduction when going from <strong>WAL Mode (E)</strong> to <strong>WAL + Sync NORMAL (F)</strong>. 
+    It compares both <strong>P99 Latency</strong> and <strong>Average Latency</strong> across different worker counts.</p>
+    
+    <div id="wal-sync-latency-rg4vw2pjq" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"WAL to WAL+Sync Normal - Latency Improvement","data":{"values":[{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":1.5661609999951907},{"type":"data","concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":1.2796220000018366},{"type":"annotation","concurrency":1,"metric":"P99 Latency","midpoint":1.4156602951056876,"label":"-18%"},{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":0.8174576630300454},{"type":"data","concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":0.7671517123200041},{"type":"annotation","concurrency":1,"metric":"Avg Latency","midpoint":0.7919053263759552,"label":"-6%"},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":2.4762229999760166},{"type":"data","concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":2.209495999966748},{"type":"annotation","concurrency":2,"metric":"P99 Latency","midpoint":2.3390606690448776,"label":"-11%"},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":1.4002560940299993},{"type":"data","concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":1.3310670435499874},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":10.745245000056457},{"type":"data","concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":10.822876000020187},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":3.277602246799936},{"type":"data","concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":3.5939618898699313},{"type":"annotation","concurrency":4,"metric":"Avg Latency","midpoint":3.432138919850278,"label":"+10%"},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":61.43524200003594},{"type":"data","concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":59.18545699992683},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":12.102967314579923},{"type":"data","concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":10.12510157106024},{"type":"annotation","concurrency":8,"metric":"Avg Latency","midpoint":11.069949113313209,"label":"-16%"},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":114.65533400001004},{"type":"data","concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":121.70975300006103},{"type":"annotation","concurrency":16,"metric":"P99 Latency","midpoint":118.12989622140842,"label":"+6%"},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":22.326900866899685},{"type":"data","concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":23.95400490710971},{"type":"annotation","concurrency":16,"metric":"Avg Latency","midpoint":23.126147386157236,"label":"+7%"},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":201.91397699993104},{"type":"data","concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":220.18032000004314},{"type":"annotation","concurrency":32,"metric":"P99 Latency","midpoint":210.84943459332814,"label":"+9%"},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":36.79333517152001},{"type":"data","concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":37.320676191019984},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":981.8456860000733},{"type":"data","concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":867.1603470002301},{"type":"annotation","concurrency":64,"metric":"P99 Latency","midpoint":922.7229517967473,"label":"-12%"},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":107.49351636380175},{"type":"data","concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":101.06395757968984},{"type":"annotation","concurrency":64,"metric":"Avg Latency","midpoint":104.22917143431083,"label":"-6%"},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"P99 Latency","value":1795.2708560000174},{"type":"data","concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":1328.640372000169},{"type":"annotation","concurrency":128,"metric":"P99 Latency","midpoint":1544.4317200695293,"label":"-26%"},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"Avg Latency","value":264.41297013594345},{"type":"data","concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Avg Latency","value":194.31207284361076},{"type":"annotation","concurrency":128,"metric":"Avg Latency","midpoint":226.66855166487238,"label":"-27%"}]},"facet":{"row":{"field":"metric","title":null,"header":{"labelFontSize":16,"labelFontWeight":"bold"}}},"spec":{"width":800,"height":300,"layer":[{"transform":[{"filter":"datum.type === 'data'"}],"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Latency (ms)","scale":{"type":"log","domainMin":0.1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["WAL Mode","WAL + Sync NORMAL"],"range":["#27ae60","#00bcd4"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Latency","format":".2f"}]}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333","fill":"#fff","stroke":"#fff","strokeWidth":2},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333"},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}}]},"resolve":{"scale":{"y":"independent"}}};
+            vegaEmbed('#wal-sync-latency-rg4vw2pjq', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>WAL to WAL+Sync Normal: Throughput Improvement</h2>
+    <p>This chart shows the throughput improvement when going from <strong>WAL Mode (E)</strong> to <strong>WAL + Sync NORMAL (F)</strong>. 
+    It compares <strong>Writes Per Second</strong> across different worker counts.</p>
+    
+    <div id="wal-sync-throughput-9iggzflz6" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"WAL to WAL+Sync Normal - Throughput Improvement","data":{"values":[{"type":"data","concurrency":1,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":556.638536747916},{"type":"data","concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":593.29630362713},{"type":"annotation","concurrency":1,"metric":"Writes / Sec","midpoint":574.6752007081503,"label":"+7%"},{"type":"data","concurrency":2,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":644.4552265899722},{"type":"data","concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":686.0086100627691},{"type":"annotation","concurrency":2,"metric":"Writes / Sec","midpoint":664.9073877170216,"label":"+6%"},{"type":"data","concurrency":4,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":496.3286700843251},{"type":"data","concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":443.0676635739424},{"type":"annotation","concurrency":4,"metric":"Writes / Sec","midpoint":468.9426235895219,"label":"-11%"},{"type":"data","concurrency":8,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":222.9519123520267},{"type":"data","concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":264.52592674020343},{"type":"annotation","concurrency":8,"metric":"Writes / Sec","midpoint":242.85090329957694,"label":"+19%"},{"type":"data","concurrency":16,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":214.07820131952937},{"type":"data","concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":192.503023670562},{"type":"annotation","concurrency":16,"metric":"Writes / Sec","midpoint":203.00418974978004,"label":"-10%"},{"type":"data","concurrency":32,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":210.47194733536912},{"type":"data","concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":199.62376005885625},{"type":"annotation","concurrency":32,"metric":"Writes / Sec","midpoint":204.97609986043727,"label":"-5%"},{"type":"data","concurrency":64,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":100.9404094351442},{"type":"data","concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":115.46151584933902},{"type":"annotation","concurrency":64,"metric":"Writes / Sec","midpoint":107.9570872330051,"label":"+14%"},{"type":"data","concurrency":128,"scenario":"WAL Mode","color":"#27ae60","metric":"Writes / Sec","value":92.73853384054163},{"type":"data","concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Writes / Sec","value":123.20525061586618},{"type":"annotation","concurrency":128,"metric":"Writes / Sec","midpoint":106.89188137352583,"label":"+33%"}]},"width":800,"height":300,"layer":[{"transform":[{"filter":"datum.type === 'data'"}],"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Writes / Second","scale":{"type":"log","domainMin":1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["WAL Mode","WAL + Sync NORMAL"],"range":["#27ae60","#00bcd4"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Writes/Sec","format":",.0f"}]}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333","fill":"#fff","stroke":"#fff","strokeWidth":2},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}},{"transform":[{"filter":"datum.type === 'annotation'"}],"mark":{"type":"text","align":"center","baseline":"middle","dy":0,"fontSize":10,"fontWeight":"bold","color":"#333"},"encoding":{"x":{"field":"concurrency","type":"ordinal"},"y":{"field":"midpoint","type":"quantitative"},"text":{"field":"label"}}}]};
+            vegaEmbed('#wal-sync-throughput-9iggzflz6', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>Advanced WAL Tuning (F, G, H, I): Latency Comparison</h2>
+    <p>This chart compares latency metrics across four advanced WAL configurations:
+    <ul>
+        <li><strong>F:</strong> WAL + Sync NORMAL</li>
+        <li><strong>G:</strong> WAL + NORMAL + Checkpoint 2k</li>
+        <li><strong>H:</strong> WAL + NORMAL + Checkpoint 4k</li>
+        <li><strong>I:</strong> WAL + NORMAL + Checkpoint 4k + 1GB MMAP</li>
+    </ul>
+    Both <strong>Average Latency</strong> and <strong>P99 Latency</strong> are shown on separate charts.</p>
+    
+    <div id="fghi-latency-cf8ewj4yv" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"Scenarios F, G, H, I - Latency Comparison","data":{"values":[{"concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":0.7671517123200041},{"concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":1.2796220000018366},{"concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":1.3310670435499874},{"concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":2.209495999966748},{"concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":3.5939618898699313},{"concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":10.822876000020187},{"concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":10.12510157106024},{"concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":59.18545699992683},{"concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":23.95400490710971},{"concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":121.70975300006103},{"concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":37.320676191019984},{"concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":220.18032000004314},{"concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":101.06395757968984},{"concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":867.1603470002301},{"concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"Average Latency","value":194.31207284361076},{"concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","metric":"P99 Latency","value":1328.640372000169},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":0.9903028145199548},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":2.186098000005586},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":1.506967474469917},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":2.6349320000153966},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":3.4482159138500297},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":10.931634999986272},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":11.04209515784978},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":61.42211199994199},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":24.494503700640138},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":119.54462400008924},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":41.88149210486042},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":245.8750360000413},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":71.32890060729055},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":557.5971429999918},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"Average Latency","value":179.771561407635},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","metric":"P99 Latency","value":1191.4563100002706},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":1.0064493379799682},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":2.223147999997309},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":1.5020356644299158},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":2.846596999996109},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":3.453969275189968},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":10.942916000029072},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":11.390019064270051},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":61.84805499995127},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":24.467947118189908},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":119.14742499997374},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":41.73233274015965},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":244.60988299991004},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":69.32991572152034},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":555.2882469999604},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"Average Latency","value":210.07008476076055},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","metric":"P99 Latency","value":1280.2398810000159},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":0.8657644203299767},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":2.3957319999899482},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":1.371191709179958},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":2.53922799997963},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":3.4843013121499498},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":10.781565999961458},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":13.437719637910034},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":63.078645000001416},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":29.664285159059716},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":139.74099999992177},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":40.446170259000155},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":200.9401750001125},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":93.00230120662026},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":657.4366780002601},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"Average Latency","value":176.08483673393894},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","metric":"P99 Latency","value":1162.1979370000772}]},"facet":{"row":{"field":"metric","title":null,"header":{"labelFontSize":16,"labelFontWeight":"bold"}}},"spec":{"width":800,"height":300,"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Latency (ms)","scale":{"type":"log","domainMin":0.1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["WAL + Sync NORMAL","WAL + NORMAL + Checkpoint 2k","WAL + NORMAL + Checkpoint 4k","WAL + NORMAL + Checkpoint 4k + 1GB MMAP"],"range":["#00bcd4","#2980b9","#e84393","#2c3e50"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Latency","format":".2f"}]}},"resolve":{"scale":{"y":"independent"}}};
+            vegaEmbed('#fghi-latency-cf8ewj4yv', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>Advanced WAL Tuning (F, G, H, I): Throughput Comparison</h2>
+    <p>This chart compares <strong>Writes Per Second</strong> across the four advanced WAL configurations (F, G, H, I).</p>
+    
+    <div id="fghi-throughput-0ydhgw0e4" class="chart-container" style="display: flex; justify-content: center;"></div>
+    <script>
+        (function() {
+            const spec = {"$schema":"https://vega.github.io/schema/vega-lite/v5.json","description":"Scenarios F, G, H, I - Throughput Comparison","data":{"values":[{"concurrency":1,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":593.29630362713},{"concurrency":2,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":686.0086100627691},{"concurrency":4,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":443.0676635739424},{"concurrency":8,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":264.52592674020343},{"concurrency":16,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":192.503023670562},{"concurrency":32,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":199.62376005885625},{"concurrency":64,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":115.46151584933902},{"concurrency":128,"scenario":"WAL + Sync NORMAL","color":"#00bcd4","value":123.20525061586618},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":468.47701571699105},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":606.5449322294277},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":465.71004404865386},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":241.25650147465666},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":196.19482143483992},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":189.6151847689},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":174.4760692209986},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 2k","color":"#2980b9","value":131.7218151841287},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":459.35033342275517},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":597.2906517866355},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":465.1522740174197},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":234.30980588563568},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":195.7515335183005},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":189.68526182532986},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":179.91252852663095},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k","color":"#e84393","value":118.1649725304949},{"concurrency":1,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":498.20399987427027},{"concurrency":2,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":652.1739434092642},{"concurrency":4,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":458.78405311931704},{"concurrency":8,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":203.68822189433823},{"concurrency":16,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":174.10929836416906},{"concurrency":32,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":204.39883528191174},{"concurrency":64,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":136.68891307725553},{"concurrency":128,"scenario":"WAL + NORMAL + Checkpoint 4k + 1GB MMAP","color":"#2c3e50","value":136.92173339886608}]},"width":800,"height":400,"mark":{"type":"line","point":true,"strokeWidth":3},"encoding":{"x":{"field":"concurrency","type":"ordinal","title":"Number of Workers","axis":{"labelAngle":0}},"y":{"field":"value","type":"quantitative","title":"Writes / Second","scale":{"type":"log","domainMin":1},"axis":{"grid":true}},"color":{"field":"scenario","type":"nominal","scale":{"domain":["WAL + Sync NORMAL","WAL + NORMAL + Checkpoint 2k","WAL + NORMAL + Checkpoint 4k","WAL + NORMAL + Checkpoint 4k + 1GB MMAP"],"range":["#00bcd4","#2980b9","#e84393","#2c3e50"]},"title":"Configuration"},"tooltip":[{"field":"scenario","title":"Config"},{"field":"concurrency","title":"Workers"},{"field":"value","title":"Writes/Sec","format":",.0f"}]}};
+            vegaEmbed('#fghi-throughput-0ydhgw0e4', spec).catch(console.error);
+        })();
+    </script>
+    
+
+    <h2>Summary of All Scenarios (Max Concurrency)</h2>
+    <p>Performance metrics at the highest concurrency level tested for each scenario.</p>
+    
+    <div class="summary-table-container">
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">Color</th>
+                    <th>Scenario</th>
+                    <th>Max Workers</th>
+                    <th>Writes / Sec</th>
+                    <th>Min (ms)</th>
+                    <th>Avg (ms)</th>
+                    <th>P50 (ms)</th>
+                    <th>P95 (ms)</th>
+                    <th>P99 (ms)</th>
+                    <th>Max (ms)</th>
+                    <th>Total Errors</th>
+                    <th>Success Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #e74c3c; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>A: Baseline</strong><br><small>base0</small></td>
+                <td>128</td>
+                <td>69</td>
+                <td>-</td>
+                <td>27.54</td>
+                <td>-</td>
+                <td>237.86</td>
+                <td>470.45</td>
+                <td>-</td>
+                <td>99069 (99069 locks)</td>
+                <td>0.9%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #d35400; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>B: Busy Timeout 5s</strong><br><small>busyTimeout1</small></td>
+                <td>128</td>
+                <td>61</td>
+                <td>-</td>
+                <td>603.84</td>
+                <td>-</td>
+                <td>1824.45</td>
+                <td>2607.24</td>
+                <td>-</td>
+                <td>5 (5 locks)</td>
+                <td>100.0%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #f39c12; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>C: Busy Timeout 2s</strong><br><small>busyTimeout2000</small></td>
+                <td>128</td>
+                <td>68</td>
+                <td>-</td>
+                <td>580.24</td>
+                <td>-</td>
+                <td>1634.21</td>
+                <td>2002.81</td>
+                <td>-</td>
+                <td>1851 (1851 locks)</td>
+                <td>98.1%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #8e44ad; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>D: Busy Timeout 400ms</strong><br><small>busyTimeout400</small></td>
+                <td>128</td>
+                <td>135</td>
+                <td>-</td>
+                <td>208.20</td>
+                <td>-</td>
+                <td>463.29</td>
+                <td>544.69</td>
+                <td>-</td>
+                <td>43582 (43582 locks)</td>
+                <td>56.4%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #27ae60; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>E: WAL Mode</strong><br><small>wal</small></td>
+                <td>128</td>
+                <td>93</td>
+                <td>-</td>
+                <td>264.41</td>
+                <td>-</td>
+                <td>1269.93</td>
+                <td>1795.27</td>
+                <td>-</td>
+                <td>468 (468 locks)</td>
+                <td>99.5%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #00bcd4; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>F: WAL + Sync NORMAL</strong><br><small>walSyncNormal</small></td>
+                <td>128</td>
+                <td>123</td>
+                <td>-</td>
+                <td>194.31</td>
+                <td>-</td>
+                <td>869.64</td>
+                <td>1328.64</td>
+                <td>-</td>
+                <td>37 (37 locks)</td>
+                <td>100.0%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #2980b9; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>G: WAL + NORMAL + Checkpoint 2k</strong><br><small>walSyncNormalAutocheckpoint2000</small></td>
+                <td>128</td>
+                <td>132</td>
+                <td>-</td>
+                <td>179.77</td>
+                <td>-</td>
+                <td>769.90</td>
+                <td>1191.46</td>
+                <td>-</td>
+                <td>1 (1 locks)</td>
+                <td>100.0%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #e84393; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>H: WAL + NORMAL + Checkpoint 4k</strong><br><small>walSyncNormalAutocheckpoint4000</small></td>
+                <td>128</td>
+                <td>118</td>
+                <td>-</td>
+                <td>210.07</td>
+                <td>-</td>
+                <td>868.32</td>
+                <td>1280.24</td>
+                <td>-</td>
+                <td>29 (29 locks)</td>
+                <td>100.0%</td>
+            </tr>
+        
+            <tr>
+                <td><div style="width: 20px; height: 20px; background-color: #2c3e50; border-radius: 4px; border: 1px solid #ddd;"></div></td>
+                <td><strong>I: WAL + NORMAL + Checkpoint 4k + 1GB MMAP</strong><br><small>walSyncNormalAutocheckpoint4000Mmap1gb</small></td>
+                <td>128</td>
+                <td>137</td>
+                <td>-</td>
+                <td>176.08</td>
+                <td>-</td>
+                <td>760.09</td>
+                <td>1162.20</td>
+                <td>-</td>
+                <td>0 (0 locks)</td>
+                <td>100.0%</td>
+            </tr>
+        
+            </tbody>
+        </table>
+    </div>
+    
+
+</body>
+</html>

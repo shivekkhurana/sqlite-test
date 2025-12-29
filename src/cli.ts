@@ -9,6 +9,7 @@ import type { ReadResult, ReadTask, ReadQueryType } from "./readWorkerCore.js";
 import { generateReport as generateReportFromResults } from "./reportGenerator.js";
 import { generateCompoundReport } from "./compoundReportsGenerator.js";
 import { generateScenarioCompoundReport } from "./scenarioCompoundReportsGenerator.js";
+import { generateScenarioCompoundReportV2 } from "./scenarioCompoundReportV2.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..");
@@ -16,12 +17,13 @@ const projectRoot = join(__dirname, "..");
 const program = new Command();
 program.version("0.0.1");
 
-const USER_COUNT = 1000;
-const POST_COUNT = 4000;
-const TAG_COUNT = 1000;
-const USER_POST_COUNT = 3000;
-const POST_TAG_COUNT = 1000;
-const TOTAL_WRITES = USER_COUNT + POST_COUNT + TAG_COUNT + USER_POST_COUNT + POST_TAG_COUNT; // 10,000 total
+// Test configuration
+const USER_COUNT = 10000;
+const POST_COUNT = 40000;
+const TAG_COUNT = 10000;
+const USER_POST_COUNT = 30000;
+const POST_TAG_COUNT = 10000;
+const TOTAL_WRITES = USER_COUNT + POST_COUNT + TAG_COUNT + USER_POST_COUNT + POST_TAG_COUNT;
 const CONCURRENCY_LEVELS = [1, 2, 4, 8, 16, 32, 64, 128];
 
 // Scenario configuration
@@ -497,6 +499,16 @@ program.command("scenario-compound-report")
             resultsDir: join(projectRoot, "results"),
             scenariosDir: join(projectRoot, "scenarios"),
             outputPath: join(projectRoot, "derived-reports", "scenario-throughput.html")
+        });
+    });
+
+program.command("scenario-compound-report-v2")
+    .description("Generate V2 compound report with baseline performance analysis")
+    .action(() => {
+        generateScenarioCompoundReportV2({
+            resultsDir: join(projectRoot, "results"),
+            scenariosDir: join(projectRoot, "scenarios"),
+            outputPath: join(projectRoot, "derived-reports", "scenario-throughput-v2.html")
         });
     });
 
